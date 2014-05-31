@@ -14,8 +14,8 @@ using namespace std;
 //
 extern "C" int EXPORT_API shareDX11(ID3D11Texture2D * texturePointer)
 {
+	//UnityLog("Share DX11 From Plugin !");
 	HANDLE sharedHandle;
-	D3DFORMAT d9format = D3DFMT_A8R8G8B8;
 
 	// LJ NOTE
 	// For sharing a DX11 texture with DX9 receivers 
@@ -26,7 +26,11 @@ extern "C" int EXPORT_API shareDX11(ID3D11Texture2D * texturePointer)
 	texturePointer->GetDesc(&td);
 	td.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 	td.MiscFlags =  D3D11_RESOURCE_MISC_SHARED;
+	
+	td.Format = DXGI_FORMAT_R8G8B8A8_UNORM; //test
 
+	//UnityLog(std::to_string(td.Format).c_str());
+	
 	// Create a new shared texture with the same properties
 	g_D3D11Device->CreateTexture2D(&td, NULL, &g_pSharedTexture);
 
@@ -42,7 +46,7 @@ extern "C" int EXPORT_API shareDX11(ID3D11Texture2D * texturePointer)
 		createSenderFromSharedHandle(sharedHandle,td);
 	}
 	else {
-		UnityLog("error in shareDX11");
+		//UnityLog("error in shareDX11");
 	}
 
 	return 2;

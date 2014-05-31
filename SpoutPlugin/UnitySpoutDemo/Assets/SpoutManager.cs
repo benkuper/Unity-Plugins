@@ -23,7 +23,9 @@ public class SpoutManager : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		tex = new Texture2D(rt.width,rt.height,TextureFormat.RGB24,false);
+		//setNativeDebug();
+		
+		tex = new Texture2D(rt.width,rt.height,TextureFormat.ARGB32,false);
 		texColors = new Color[tex.width*tex.height];
 		
 		if(useRenderTexture)
@@ -34,51 +36,51 @@ public class SpoutManager : MonoBehaviour {
 			targetTex = tex;
 		}
 		
-		go.renderer.material.mainTexture = targetTex;
+		go.renderer.material.mainTexture = tex;
 		
 		updateTexColors();
 		
-		shareTexture(tex);
+		shareTexture(targetTex);
 	}
 	
 	void updateTexColors()
 	{
-		if(useRenderTexture)
+		/*if(useRenderTexture)
 		{
 			RenderTexture.active = rt;
 			tex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
 			tex.Apply();
 			RenderTexture.active = null;
+			return;
 			
 			
-			
-		}else
-		{
-			if(autoAnimate)
-			{
-				color1.r = (color1.r+.01f)%1;
-				color2.g = (color2.g+.007f)%1;
-				color3.b = (color3.b+.023f)%1;
-			}
-			
-			for(int i=0;i<tex.width;i++)
-			{
-				for(int j=0;j<tex.height;j++)
-				{
-					Color c = Color.Lerp(color1,Color.Lerp(color2,color3,i*1.00f/tex.width),j*1.00f/tex.height);
-					texColors[j*tex.width+i] = c;
-					//tex.SetPixel(i,j,c);
-				}
-			}
-			tex.SetPixels(texColors);
-			tex.Apply();
 		}
+		*/
+		if(autoAnimate)
+		{
+			color1.r = (color1.r+.01f)%1;
+			color2.g = (color2.g+.007f)%1;
+			color3.b = (color3.b+.023f)%1;
+		}
+		
+		for(int i=0;i<tex.width;i++)
+		{
+			for(int j=0;j<tex.height;j++)
+			{
+				Color c = Color.Lerp(color1,Color.Lerp(color2,color3,i*1.00f/tex.width),j*1.00f/tex.height);
+				texColors[j*tex.width+i] = c;
+				//tex.SetPixel(i,j,c);
+			}
+		}
+		tex.SetPixels(texColors);
+		tex.Apply();
+		
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		updateTexColors();
-		updateTexture(tex);
+		updateTexture(targetTex);
 	}
 	
 	 
@@ -113,5 +115,30 @@ public class SpoutManager : MonoBehaviour {
 	public static void updateTexture(Texture texture)
 	{
 		updateTextureNative(texture.GetNativeTexturePtr());
+	}
+	
+	
+	
+	//Debug
+	[DllImport ("NativeSpoutPlugin")]
+	public static extern void SetDebugFunction( IntPtr fp );
+	
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	public delegate void DebugDelegate(string str);
+	
+	void setNativeDebug()
+	{
+		DebugDelegate callback_delegate = new DebugDelegate( CallBackFunction );
+		IntPtr intptr_delegate = 
+			Marshal.GetFunctionPointerForDelegate(callback_delegate);
+		
+		// Call the API passing along the function pointer.
+		SetDebugFunction( intptr_delegate );
+	}
+	
+	
+	static void CallBackFunction(string str)
+	{
+		Debug.Log("[Plugin] " + str);
 	}
 }
