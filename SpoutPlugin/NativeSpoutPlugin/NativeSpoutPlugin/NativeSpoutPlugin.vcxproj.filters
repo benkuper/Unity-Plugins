@@ -24,12 +24,30 @@
     <ClInclude Include="UnityPluginInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SpoutHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NativeSpoutPlugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\Ressources\SDKs\SpoutSDK\spoutDirectX.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\Ressources\SDKs\SpoutSDK\spoutGLext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\Ressources\SDKs\SpoutSDK\spoutInterop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\Ressources\SDKs\SpoutSDK\spoutMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\Ressources\SDKs\SpoutSDK\spoutSenders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

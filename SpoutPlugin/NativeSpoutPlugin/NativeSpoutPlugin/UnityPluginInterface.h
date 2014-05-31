@@ -104,6 +104,15 @@ static void DebugLog (const char* str)
 	#endif
 }
 
+//Debug in Unity Function
+typedef void (*FuncPtr)( const char * );
+FuncPtr UnityLog;
+extern "C"   void EXPORT_API SetDebugFunction( FuncPtr fp )
+{
+        UnityLog = fp;
+ 
+}
+
 // COM-like Release macro
 #ifndef SAFE_RELEASE
 #define SAFE_RELEASE(a) if (a) { a->Release(); a = NULL; }
@@ -174,6 +183,10 @@ extern "C" void EXPORT_API UnitySetGraphicsDevice (void* device, int deviceType,
 #if SUPPORT_D3D9
 
 static IDirect3DDevice9* g_D3D9Device;
+//don't forget to cleanup these at the end !!!
+IDirect3D9Ex *			g_pDirect3D9Ex = NULL;
+IDirect3DDevice9Ex *	g_pDeviceD3D9ex = NULL;
+bool					is64bit = ( sizeof(int*) == 8 );
 
 static void SetGraphicsDeviceD3D9 (IDirect3DDevice9* device, GfxDeviceEventType eventType)
 {
@@ -191,12 +204,14 @@ static void SetGraphicsDeviceD3D9 (IDirect3DDevice9* device, GfxDeviceEventType 
 #if SUPPORT_D3D11
 
 static ID3D11Device* g_D3D11Device;
-static ID3D11DeviceContext * g_D3D11DeviceContext;
+// Global Variables
+ID3D11DeviceContext*    g_pImmediateContext = NULL;
+ID3D11Texture2D*		g_pSharedTexture = NULL; //A texture we want to share with the rest of the world !!!
 
 static void SetGraphicsDeviceD3D11 (ID3D11Device* device, GfxDeviceEventType eventType)
 {
 	g_D3D11Device = device;
-	g_D3D11Device->GetImmediateContext(&g_D3D11DeviceContext);
+	g_D3D11Device->GetImmediateContext(&g_pImmediateContext);
 }
 
 #endif // #if SUPPORT_D3D11

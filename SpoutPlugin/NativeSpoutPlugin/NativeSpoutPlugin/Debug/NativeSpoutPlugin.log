@@ -1,5 +1,13 @@
-﻿Build started 30/05/2014 16:45:14.
+﻿Build started 31/05/2014 11:34:15.
+     1>Project "D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         NativeSpoutPlugin.vcxproj -> D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin\Debug\NativeSpoutPlugin.dll
+       PostBuildEvent:
+         copy D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin\Debug\NativeSpoutPlugin.dll D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin\\..\..\UnitySpoutDemo\Assets\Plugins
+         :VCEnd
+                 1 file(s) copied.
+     1>Done Building Project "D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.01
+Time Elapsed 00:00:00.05
