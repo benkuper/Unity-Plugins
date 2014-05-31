@@ -1,4 +1,4 @@
-﻿Build started 31/05/2014 12:53:14.
+﻿Build started 31/05/2014 13:13:24.
      1>Project "D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ID:\Documents\Ressources\SDKs\SpoutSDK /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D NATIVESPOUTPLUGIN_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt NativeSpoutPlugin.cpp
@@ -20,4 +20,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.35
+Time Elapsed 00:00:01.33

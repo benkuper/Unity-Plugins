@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Runtime.InteropServices;
 
+using UnityEngine.UI;
 
 public class SpoutManager : MonoBehaviour {
 
@@ -19,7 +20,12 @@ public class SpoutManager : MonoBehaviour {
 	
 	public RenderTexture rt;
 	
+	
 	Texture targetTex;
+	
+	public Text t;
+	
+	bool sharing;
 	
 	// Use this for initialization
 	void Start () {
@@ -40,8 +46,9 @@ public class SpoutManager : MonoBehaviour {
 		
 		updateTexColors();
 		
-		shareTexture(targetTex);
+		
 	}
+	
 	
 	void updateTexColors()
 	{
@@ -80,9 +87,18 @@ public class SpoutManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		updateTexColors();
-		updateTexture(targetTex);
+		if(!sharing && Input.GetKeyDown(KeyCode.Space))
+		{
+			shareTexture(targetTex);
+			sharing = true;
+			
+			t.text = t.text + " [Sharing now]";
+			Debug.Log(t.text);
+		}else if(sharing)
+		{
+			updateTexture(targetTex);
+		}
 	}
-	
 	 
 	
 	void OnApplicationQuit()

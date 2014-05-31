@@ -30,7 +30,7 @@ extern "C" int EXPORT_API shareDX11(ID3D11Texture2D * texturePointer)
 	td.Format = DXGI_FORMAT_R8G8B8A8_UNORM; //test
 
 	//UnityLog(std::to_string(td.Format).c_str());
-	
+
 	// Create a new shared texture with the same properties
 	g_D3D11Device->CreateTexture2D(&td, NULL, &g_pSharedTexture);
 
