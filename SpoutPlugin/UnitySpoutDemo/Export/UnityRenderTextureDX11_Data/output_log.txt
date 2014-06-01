@@ -16,38 +16,24 @@ Platform assembly: D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\Un
 Loading D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\UnitySpoutDemo\Export\UnityRenderTextureDX11_Data\Managed\Assembly-UnityScript-firstpass.dll into Unity Child Domain
 Platform assembly: D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\UnitySpoutDemo\Export\UnityRenderTextureDX11_Data\Managed\UnityEngine.UI.dll (this message is harmless)
 Loading D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\UnitySpoutDemo\Export\UnityRenderTextureDX11_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
-- Completed reload, in  0.045 seconds
+- Completed reload, in  0.055 seconds
 <RI> Initializing input.
 <RI> Input initialized.
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 Platform assembly: D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\UnitySpoutDemo\Export\UnityRenderTextureDX11_Data\Managed\System.dll (this message is harmless)
 [SpoutManager :: shareTexture]
-UnityEngine.Debug:Internal_Log(Int32, String, Object)
-UnityEngine.Debug:Log(Object)
-SpoutManager:shareTexture(Texture) (at D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\UnitySpoutDemo\Assets\SpoutManager.cs:126)
-SpoutManager:Update() (at D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\UnitySpoutDemo\Assets\SpoutManager.cs:92)
  
-(Filename: D Line: 0)
+(Filename: C:/BuildAgent/work/aeedb04a1292f85a/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 49)
 
 share result = 2
-UnityEngine.Debug:Internal_Log(Int32, String, Object)
-UnityEngine.Debug:Log(Object)
-SpoutManager:shareTexture(Texture) (at D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\UnitySpoutDemo\Assets\SpoutManager.cs:128)
-SpoutManager:Update() (at D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\UnitySpoutDemo\Assets\SpoutManager.cs:92)
  
-(Filename: D Line: 0)
+(Filename: C:/BuildAgent/work/aeedb04a1292f85a/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 49)
 
 Press Space to start sharing [Sharing now]
-UnityEngine.Debug:Internal_Log(Int32, String, Object)
-UnityEngine.Debug:Log(Object)
-SpoutManager:Update() (at D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\UnitySpoutDemo\Assets\SpoutManager.cs:96)
  
-(Filename: D Line: 0)
+(Filename: C:/BuildAgent/work/aeedb04a1292f85a/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 49)
 
 Cleanup !
-UnityEngine.Debug:Internal_Log(Int32, String, Object)
-UnityEngine.Debug:Log(Object)
-SpoutManager:OnApplicationQuit() (at D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\UnitySpoutDemo\Assets\SpoutManager.cs:106)
  
-(Filename: D Line: 0)
+(Filename: C:/BuildAgent/work/aeedb04a1292f85a/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 49)
 
