@@ -570,6 +570,7 @@ MonoBehaviour:
   useRenderTexture: 1
   rt: {fileID: 8400000, guid: 942df2466a1c81b4889ae34dc6bb20c6, type: 2}
   t: {fileID: 837120837}
+  sharingName: UnityDemo 1
 --- !u!4 &2040115048
 Transform:
   m_ObjectHideFlags: 0

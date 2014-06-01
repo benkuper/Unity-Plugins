@@ -15,7 +15,7 @@
 #include "spoutMap.h"		// memory map creation and management
 #include "spoutInterop.h"
 
-// SPOUT
+// GLOBAL VARIABLES :: need to be changed so multiple senders / receivers can co exist
 bool					bInitialized = false;
 char					g_SenderName[256];	// Spout sender and shared memory name
 HANDLE					g_shareHandle;		// Global texture share handle
@@ -23,7 +23,6 @@ unsigned int			g_width;			// Global texture width
 unsigned int			g_height;			// Global texture height
 SharedTextureInfo		g_info;				// Global texture info structre
 spoutInterop			spout;				// Spout setup functions
-
 
 // ############# SPOUT FUNCTIONS #################
 extern "C"  int EXPORT_API initSpout()
@@ -51,7 +50,7 @@ extern "C" void EXPORT_API SpoutCleanup()
 
 
 
-extern "C" void createSenderFromSharedHandle(HANDLE sharedHandle, D3D11_TEXTURE2D_DESC td)
+extern "C" void createSenderFromSharedHandle(char * senderName, HANDLE sharedHandle, D3D11_TEXTURE2D_DESC td)
 {
 	// 1) Set global variables to check for texture changes
 		g_shareHandle	= sharedHandle;
@@ -66,15 +65,15 @@ extern "C" void createSenderFromSharedHandle(HANDLE sharedHandle, D3D11_TEXTURE2
 		g_info.usage			= (DWORD)td.Usage; // unused
 
 		// 3) Create a sender name
-		strcpy_s(g_SenderName, 256, "Unity");	// Sender name 
+		//strcpy_s(g_SenderName, 256, senderName);	// Sender name 
 
 		// 4) Create a Spout sender
-		spout.CreateSender(g_SenderName,(DX9SharedTextureInfo *)&g_info);
+		spout.CreateSender(senderName,g_info.width,g_info.height,g_shareHandle,g_info.format);
 
 		bInitialized = true; // flag that a sender has been created for update
 }
 
-extern "C" void EXPORT_API updateTexture(ID3D11Texture2D * texturePointer)
+extern "C" void EXPORT_API updateTexture(char* senderName, ID3D11Texture2D * texturePointer)
 {
 	
 	if(g_pImmediateContext == NULL) UnityLog("Immediate context is null");
@@ -95,7 +94,7 @@ extern "C" void EXPORT_API updateTexture(ID3D11Texture2D * texturePointer)
 			g_info.height	= (unsigned __int32)g_height;
 			// This assumes that the sharehandle in the info structure remains 
 			// the same as the texture this could be checked as well
-			spout.UpdateSender(g_SenderName, (DX9SharedTextureInfo *)&g_info);
+			spout.UpdateSender(senderName,g_width,g_height,g_shareHandle,g_info.format);
 		}
 	}
 

@@ -27,9 +27,11 @@ public class SpoutManager : MonoBehaviour {
 	
 	bool sharing;
 	
+	public string sharingName = "UnityDemo 1";
+	
 	// Use this for initialization
 	void Start () {
-		//setNativeDebug();
+		setNativeDebug();
 		
 		tex = new Texture2D(rt.width,rt.height,TextureFormat.ARGB32,false);
 		texColors = new Color[tex.width*tex.height];
@@ -89,17 +91,40 @@ public class SpoutManager : MonoBehaviour {
 		updateTexColors();
 		if(!sharing && Input.GetKeyDown(KeyCode.Space))
 		{
-			shareTexture(targetTex);
+			shareTexture(sharingName, targetTex);
 			sharing = true;
 			
 			t.text = t.text + " [Sharing now]";
 			Debug.Log(t.text);
-		}else if(sharing)
+		}else if(Input.GetKeyDown(KeyCode.R))
 		{
-			updateTexture(targetTex);
+			Texture2D receiveTex = receiveDemoTexture();
+			go.renderer.material.mainTexture = receiveTex;
+			Debug.Log ("Format :"+receiveTex.format);
+		}else if(Input.GetKeyDown(KeyCode.N))
+		{
+			Debug.Log (getNumSenders());
+		}
+		
+		if(sharing)
+		{
+			updateTexture(sharingName, targetTex);
 		}
 	}
 	 
+	void OnGUI()
+	{
+		Event e = Event.current;
+		if(e.type == EventType.KeyDown)
+		{
+			switch(e.keyCode)
+			{
+			case KeyCode.G:
+				getSenderNames();
+			break;
+			}
+		}
+	}
 	
 	void OnApplicationQuit()
 	{
@@ -109,11 +134,24 @@ public class SpoutManager : MonoBehaviour {
 	
 	//Spout Native Plugin Exports
 	[DllImport ("NativeSpoutPlugin", EntryPoint="shareDX11")]
-	private static extern int shareTextureNative (IntPtr texture);
+	private static extern int shareTextureNative (string sharingName, IntPtr texture);
 	
 	[DllImport ("NativeSpoutPlugin", EntryPoint="updateTexture")]
-	private static extern int updateTextureNative (IntPtr texture);
+	private static extern int updateTextureNative (string sharingName, IntPtr texture);
 	
+	[DllImport ("NativeSpoutPlugin", EntryPoint="receiveDX11")]
+	private static extern bool receiveTextureNative (string sharingName, IntPtr texture, out int rWidth, out int rHeight, bool getActive);
+	
+	[DllImport ("NativeSpoutPlugin")]
+	private static extern IntPtr getTest();
+	
+	
+	[DllImport ("NativeSpoutPlugin")]
+	private static extern int getNumSenders ();
+	
+	[DllImport ("NativeSpoutPlugin", EntryPoint="getSenderNames")]
+    private static extern void getSenderNamesNative (IntPtr namesArray);
+	        
 	
 	[DllImport ("NativeSpoutPlugin")]
 	private static extern int SpoutCleanup();
@@ -121,18 +159,65 @@ public class SpoutManager : MonoBehaviour {
 	
 	
 	//Helpers
-	public static void shareTexture(Texture texture)
+	public static void shareTexture(string sharingName, Texture texture)
 	{
 		Debug.Log ("[SpoutManager :: shareTexture]");
-		int result = shareTextureNative(texture.GetNativeTexturePtr());
+		int result = shareTextureNative(sharingName, texture.GetNativeTexturePtr());
 		Debug.Log ("share result = "+result);
 	}
 	
-	public static void updateTexture(Texture texture)
+	public static void updateTexture(string sharingName, Texture texture)
 	{
-		updateTextureNative(texture.GetNativeTexturePtr());
+		updateTextureNative(sharingName, texture.GetNativeTexturePtr());
 	}
 	
+	public string[] getSenderNames()
+	{
+		Debug.Log ("get SenderNames");
+		string[] names = new string[32];
+		for(int i=0;i<32;i++)
+		{
+			names[i] = "Super long string"+i;
+		}
+		
+		GCHandle h = GCHandle.Alloc(names,GCHandleType.Pinned);
+		getSenderNamesNative(h.AddrOfPinnedObject());
+		h.Free();
+		foreach(string s in names)
+		{
+			Debug.Log (" > "+s);
+		}
+		return names;
+	}
+	
+	public Texture2D receiveTexture(string sharingName)
+	{
+		return receiveTextureToNative(sharingName,false);
+	}
+	
+	public Texture2D receiveDemoTexture()
+	{
+		return receiveTextureToNative("active-texture",true); 
+	}
+	
+	public Texture2D receiveTextureToNative(string sharingName, bool getActive)
+	{
+		int rWidth = 0;
+		int rHeight = 0;
+		IntPtr rTex = IntPtr.Zero;
+		GCHandle handle = GCHandle.Alloc(rTex,GCHandleType.Pinned);
+		bool result = receiveTextureNative(sharingName, handle.AddrOfPinnedObject(), out rWidth, out rHeight, getActive);
+		handle.Free();
+		Debug.Log ("ReceiveTextureNative result :"+result);
+		Debug.Log ("Receive Texture from Native :"+rWidth+"/"+rHeight);
+		if(result)
+		{
+			return Texture2D.CreateExternalTexture(rWidth,rHeight,TextureFormat.BGRA32,false,false,rTex);
+		}else
+		{
+			return null;
+		}
+	}
 	
 	
 	//Debug
