@@ -38,13 +38,6 @@ extern "C" void EXPORT_API SpoutCleanup()
 	UnityLog("clean Spout !");
 
 	spout.CloseSender(g_SenderName);
-	bInitialized = false; // prevent access to sender info in update
-
-	if( g_pImmediateContext ) g_pImmediateContext->ClearState();
-	if( g_pImmediateContext ) g_pImmediateContext->Release();
-	
-	if(g_D3D9Device) g_D3D9Device->Release();
-	if(g_pDeviceD3D9ex) g_pDeviceD3D9ex->Release();
 
 }
 
@@ -112,4 +105,87 @@ extern "C" void EXPORT_API updateTexture(char* senderName, ID3D11Texture2D * tex
 	*/
 	g_pImmediateContext->CopyResource(g_pSharedTexture,texturePointer);
 	g_pImmediateContext->Flush();
+}
+
+
+
+//DX9 Compat
+
+HRESULT CreateDX9SharedTexture(UINT width, UINT height, D3DFORMAT format, DWORD usage, PDIRECT3DTEXTURE9 * out_pD3D9Texture, HANDLE * out_SharedTextureHandle) {
+	HRESULT hr = S_OK;
+
+	//create Direct3D instance if necessary
+	if ( g_pDirect3D9Ex == NULL ) {
+		hr = Direct3DCreate9Ex( D3D_SDK_VERSION,  /*_Out_*/ &g_pDirect3D9Ex );
+		if ( hr != S_OK ) {
+			return hr;
+		}
+	}
+
+	//create device if necessary
+	if ( g_pDeviceD3D9ex == NULL ) {
+
+		//seems to work if no window !
+		//g_hWnd_D3D9Ex = NULL;
+
+
+		// Do we support hardware vertex processing? if so, use it. 
+		// If not, downgrade to software.
+		D3DCAPS9 d3dCaps;
+		hr = g_pDirect3D9Ex->GetDeviceCaps( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &d3dCaps );
+		if ( hr != S_OK ) {
+			// TO DO: Respond to failure of GetDeviceCaps
+			return hr;
+		}
+
+		DWORD dwBehaviorFlags = 0;
+		if ( d3dCaps.VertexProcessingCaps != 0 ) {
+			dwBehaviorFlags |= D3DCREATE_HARDWARE_VERTEXPROCESSING;
+
+			//usage = usage XOR D3DUSAGE_SOFTWAREPROCESSING;
+		}
+		else {
+			dwBehaviorFlags |= D3DCREATE_SOFTWARE_VERTEXPROCESSING;
+
+			usage = usage | D3DUSAGE_SOFTWAREPROCESSING;
+		}
+
+		usage = usage | D3DUSAGE_NONSECURE;
+			
+		D3DDISPLAYMODE displayMode;
+
+		hr = g_pDirect3D9Ex->GetAdapterDisplayMode( D3DADAPTER_DEFAULT, &displayMode);
+
+		if ( hr != S_OK ) {
+			return hr;
+		}
+
+		//D3DPRESENT_PARAMETERS * presentParameters
+		D3DPRESENT_PARAMETERS presentParameters = {0};
+		ZeroMemory( &presentParameters, sizeof(presentParameters) );
+		presentParameters.Windowed = true;
+		presentParameters.hDeviceWindow = NULL; //g_hWnd; //NULL; //g_hWnd_D3D9Ex;
+		presentParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
+		presentParameters.BackBufferWidth = 64;
+		presentParameters.BackBufferHeight = 64;
+		presentParameters.BackBufferFormat = displayMode.Format; //D3DFMT_A8R8G8B8; //format
+		presentParameters.EnableAutoDepthStencil = FALSE;
+		presentParameters.AutoDepthStencilFormat = D3DFMT_D24S8;
+		presentParameters.BackBufferCount = 1;
+		//present_parameters.Flags = 0;
+		//present_parameters.PresentationInterval   = D3DPRESENT_INTERVAL_IMMEDIATE;
+
+
+		hr = g_pDirect3D9Ex->CreateDeviceEx(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, NULL, dwBehaviorFlags, &presentParameters, NULL, &g_pDeviceD3D9ex);
+		//hr = g_pDirect3D9Ex->CreateDeviceEx(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, g_hWnd_D3D9Ex, dwBehaviorFlags, &presentParameters, NULL, &g_pDeviceD3D9ex);
+			
+		if ( hr != S_OK ) {
+			return hr;
+		}
+	}
+
+	//create texture
+	hr = g_pDeviceD3D9ex->CreateTexture(width, height, 1, usage, format, D3DPOOL_DEFAULT, out_pD3D9Texture, out_SharedTextureHandle);
+
+	return hr;
 }

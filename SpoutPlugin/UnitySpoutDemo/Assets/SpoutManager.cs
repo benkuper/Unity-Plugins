@@ -32,8 +32,9 @@ public class SpoutManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		setNativeDebug();
+		setHandlers();
 		
-		tex = new Texture2D(rt.width,rt.height,TextureFormat.ARGB32,false);
+		tex = new Texture2D(useRenderTexture?rt.width:500,useRenderTexture?rt.height:200,TextureFormat.RGBA32,false);
 		texColors = new Color[tex.width*tex.height];
 		
 		if(useRenderTexture)
@@ -48,46 +49,37 @@ public class SpoutManager : MonoBehaviour {
 		
 		updateTexColors();
 		
-		
 	}
 	
 	
 	void updateTexColors()
 	{
-		/*if(useRenderTexture)
-		{
-			RenderTexture.active = rt;
-			tex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
-			tex.Apply();
-			RenderTexture.active = null;
-			return;
-			
-			
-		}
-		*/
-		if(autoAnimate)
+		if(autoAnimate && !useRenderTexture)
 		{
 			color1.r = (color1.r+.01f)%1;
 			color2.g = (color2.g+.007f)%1;
 			color3.b = (color3.b+.023f)%1;
+			
+			for(int i=0;i<tex.width;i++)
+			{
+				for(int j=0;j<tex.height;j++)
+				{
+					Color c = Color.Lerp(color1,Color.Lerp(color2,color3,i*1.00f/tex.width),j*1.00f/tex.height);
+					texColors[j*tex.width+i] = c;
+					//tex.SetPixel(i,j,c);
+				}
+			}
+			tex.SetPixels(texColors);
+			tex.Apply();
 		}
 		
-		for(int i=0;i<tex.width;i++)
-		{
-			for(int j=0;j<tex.height;j++)
-			{
-				Color c = Color.Lerp(color1,Color.Lerp(color2,color3,i*1.00f/tex.width),j*1.00f/tex.height);
-				texColors[j*tex.width+i] = c;
-				//tex.SetPixel(i,j,c);
-			}
-		}
-		tex.SetPixels(texColors);
-		tex.Apply();
+		
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		
 		updateTexColors();
 		if(!sharing && Input.GetKeyDown(KeyCode.Space))
 		{
@@ -98,9 +90,10 @@ public class SpoutManager : MonoBehaviour {
 			Debug.Log(t.text);
 		}else if(Input.GetKeyDown(KeyCode.R))
 		{
-			Texture2D receiveTex = receiveDemoTexture();
-			go.renderer.material.mainTexture = receiveTex;
-			Debug.Log ("Format :"+receiveTex.format);
+			receiveTexture("active");
+			//if(receiveTex == null) return;
+			//go.renderer.material.mainTexture = receiveTex;
+			//Debug.Log ("Format :"+receiveTex.format);
 		}else if(Input.GetKeyDown(KeyCode.N))
 		{
 			Debug.Log (getNumSenders());
@@ -110,6 +103,7 @@ public class SpoutManager : MonoBehaviour {
 		{
 			updateTexture(sharingName, targetTex);
 		}
+		
 	}
 	 
 	void OnGUI()
@@ -129,7 +123,8 @@ public class SpoutManager : MonoBehaviour {
 	void OnApplicationQuit()
 	{
 		Debug.Log("Cleanup !");
-		//SpoutCleanup();
+		stopSharing(sharingName);
+		SpoutCleanup();
 	}
 	
 	//Spout Native Plugin Exports
@@ -140,10 +135,10 @@ public class SpoutManager : MonoBehaviour {
 	private static extern int updateTextureNative (string sharingName, IntPtr texture);
 	
 	[DllImport ("NativeSpoutPlugin", EntryPoint="receiveDX11")]
-	private static extern bool receiveTextureNative (string sharingName, IntPtr texture, out int rWidth, out int rHeight, bool getActive);
+	private static extern bool receiveTextureNative (string sharingName);
 	
 	[DllImport ("NativeSpoutPlugin")]
-	private static extern IntPtr getTest();
+	private static extern void SetSpoutHandlers(IntPtr startedHandler, IntPtr stoppedHandler);
 	
 	
 	[DllImport ("NativeSpoutPlugin")]
@@ -151,14 +146,55 @@ public class SpoutManager : MonoBehaviour {
 	
 	[DllImport ("NativeSpoutPlugin", EntryPoint="getSenderNames")]
     private static extern void getSenderNamesNative (IntPtr namesArray);
-	        
+	   
+	[DllImport ("NativeSpoutPlugin")]
+	private static extern int stopSharing(string sharingName);     
 	
 	[DllImport ("NativeSpoutPlugin")]
 	private static extern int SpoutCleanup();
 	
 	
-	
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	public delegate void SpoutSharingStartedDelegate(int partnerId, IntPtr resourceView,int textureWidth, int textureHeight);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	public delegate void SpoutSharingStoppedDelegate(int partnerId);
 	//Helpers
+	
+	
+	void TextureSharingStarted(int partnerId, IntPtr resourceView, int width, int height)
+	{
+		Debug.Log ("Texture Sharing Started : "+partnerId+"/"+width+":"+height);
+		/*
+		rw = width;
+		rh = height;
+		resourcePtr = resourceView;
+		newShare = true;
+		*/
+		if(width > 0 && height > 0)
+		{
+			go.renderer.material.mainTexture = Texture2D.CreateExternalTexture(width,height,TextureFormat.RGBA32,false,false,resourceView);
+		}
+	}
+	
+	void TextureSharingStopped(int partnerId)
+	{
+		Debug.Log ("Texture Sharing Stopped : "+partnerId);
+	}
+	
+	void setHandlers()
+	{
+		SpoutSharingStartedDelegate started_delegate = new SpoutSharingStartedDelegate (TextureSharingStarted);
+		IntPtr intptr_started_delegate = 
+			Marshal.GetFunctionPointerForDelegate (started_delegate);
+		
+		SpoutSharingStoppedDelegate stopped_delegate = new SpoutSharingStoppedDelegate (TextureSharingStopped);
+		IntPtr intptr_stopped_delegate = 
+			Marshal.GetFunctionPointerForDelegate (stopped_delegate);
+		// Call the API passing along the function pointer.
+		SetSpoutHandlers (intptr_started_delegate,intptr_stopped_delegate);
+	}
+	
+	
 	public static void shareTexture(string sharingName, Texture texture)
 	{
 		Debug.Log ("[SpoutManager :: shareTexture]");
@@ -190,33 +226,10 @@ public class SpoutManager : MonoBehaviour {
 		return names;
 	}
 	
-	public Texture2D receiveTexture(string sharingName)
-	{
-		return receiveTextureToNative(sharingName,false);
-	}
 	
-	public Texture2D receiveDemoTexture()
+	public void receiveTexture(string sharingName)
 	{
-		return receiveTextureToNative("active-texture",true); 
-	}
-	
-	public Texture2D receiveTextureToNative(string sharingName, bool getActive)
-	{
-		int rWidth = 0;
-		int rHeight = 0;
-		IntPtr rTex = IntPtr.Zero;
-		GCHandle handle = GCHandle.Alloc(rTex,GCHandleType.Pinned);
-		bool result = receiveTextureNative(sharingName, handle.AddrOfPinnedObject(), out rWidth, out rHeight, getActive);
-		handle.Free();
-		Debug.Log ("ReceiveTextureNative result :"+result);
-		Debug.Log ("Receive Texture from Native :"+rWidth+"/"+rHeight);
-		if(result)
-		{
-			return Texture2D.CreateExternalTexture(rWidth,rHeight,TextureFormat.BGRA32,false,false,rTex);
-		}else
-		{
-			return null;
-		}
+		receiveTextureNative(sharingName);
 	}
 	
 	

@@ -46,7 +46,10 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Spout.cs" />
+     <Compile Include="Assets\SpoutDX11.cs" />
      <Compile Include="Assets\SpoutManager.cs" />
+     <Compile Include="Assets\SpoutReceiver.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
  </Reference>

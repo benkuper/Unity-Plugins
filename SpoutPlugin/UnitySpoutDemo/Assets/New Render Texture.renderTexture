@@ -6,8 +6,8 @@ RenderTexture:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: New Render Texture
-  m_Width: 320
-  m_Height: 240
+  m_Width: 600
+  m_Height: 300
   m_AntiAliasing: 2
   m_DepthFormat: 0
   m_ColorFormat: 0

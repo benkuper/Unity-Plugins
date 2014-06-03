@@ -88,7 +88,7 @@ GameObject:
   - 81: {fileID: 746073218}
   - 114: {fileID: 746073223}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: RenderCam
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1266964849}
-  distance: 2.33999991
+  distance: 10
   xSpeed: 250
   ySpeed: 120
   yMinLimit: -20
@@ -339,7 +339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1266964849}
-  distance: 2.33999991
+  distance: 10
   xSpeed: 250
   ySpeed: 120
   yMinLimit: -20
@@ -563,11 +563,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   go: {fileID: 1266964845}
-  color1: {r: 1, g: 0, b: 0, a: 1}
-  color2: {r: .199999809, g: 0, b: 1, a: 1}
-  color3: {r: .365872264, g: .816176474, b: 0, a: 1}
+  color1: {r: .933823526, g: 0, b: 0, a: 1}
+  color2: {r: .262218833, g: .657247066, b: .713235259, a: 1}
+  color3: {r: .621450245, g: .948529422, b: 0, a: 1}
   autoAnimate: 1
-  useRenderTexture: 1
+  useRenderTexture: 0
   rt: {fileID: 8400000, guid: 942df2466a1c81b4889ae34dc6bb20c6, type: 2}
   t: {fileID: 837120837}
   sharingName: UnityDemo 1

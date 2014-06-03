@@ -46,7 +46,10 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Spout.cs" />
+     <Compile Include="Assets\SpoutDX11.cs" />
      <Compile Include="Assets\SpoutManager.cs" />
+     <Compile Include="Assets\SpoutReceiver.cs" />
  <Reference Include="Assembly-UnityScript-firstpass">
  <HintPath>D:/Documents/Perso/Projects/Unity/UnityPlugins/SpoutPlugin/UnitySpoutDemo/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
  </Reference>

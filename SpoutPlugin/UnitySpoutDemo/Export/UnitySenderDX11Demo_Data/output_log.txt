@@ -12,7 +12,7 @@ Platform assembly: D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\Un
 Loading D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\UnitySpoutDemo\Export\UnitySenderDX11Demo_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
 Platform assembly: D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\UnitySpoutDemo\Export\UnitySenderDX11Demo_Data\Managed\UnityEngine.UI.dll (this message is harmless)
 Loading D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\UnitySpoutDemo\Export\UnitySenderDX11Demo_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
-- Completed reload, in  0.070 seconds
+- Completed reload, in  0.068 seconds
 <RI> Initializing input.
 <RI> Input initialized.
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
