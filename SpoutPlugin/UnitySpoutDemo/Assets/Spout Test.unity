@@ -168,6 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sharingName: Processing 3
+  sendingName: unityTest
   fill: {r: 1, g: 0, b: 0, a: 1}
   updateSpout: 0
 --- !u!23 &446720367
@@ -253,6 +254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sharingName: resolume
+  sendingName: unityTest
   fill: {r: 1, g: 0, b: 0, a: 1}
   updateSpout: 0
 --- !u!23 &570719805
@@ -422,6 +424,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sharingName: Spout Demo Sender 32bit
+  sendingName: unityTest
   fill: {r: 1, g: 0, b: 0, a: 1}
   updateSpout: 1
 --- !u!23 &879999772

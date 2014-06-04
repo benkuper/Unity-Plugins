@@ -5,7 +5,8 @@ using System.Runtime.InteropServices;
 
 public class SpoutDX11 : MonoBehaviour {
 
-	public string sharingName = "UnityDX9Test";
+	public string sharingName = "";
+	public string sendingName = "unityTest";
 	public Color fill = Color.red;
 	
 	Texture2D sendTex;
@@ -15,7 +16,6 @@ public class SpoutDX11 : MonoBehaviour {
 	
 	bool sharing;
 	public bool updateSpout;
-	
 	// Use this for initialization
 	void Start () {
 		
@@ -36,7 +36,7 @@ public class SpoutDX11 : MonoBehaviour {
 		if(sharing)
 		{
 			fillTexture();
-			Spout.updateTexture(sharingName,sendTex);
+			Spout.updateTexture(sendingName,sendTex);
 		}
 		
 	}
@@ -60,16 +60,12 @@ public class SpoutDX11 : MonoBehaviour {
 		switch(e.keyCode)
 		{
 			case KeyCode.T:
-				if(!sharing)
+				if(!sharing && updateSpout)
 				{
-					Spout.shareTexture(sharingName,sendTex);
-					//renderer.material.mainTexture = sendTex;
+					Spout.shareTexture(sendingName,sendTex);
+					renderer.material.mainTexture = sendTex;
 					sharing = true;
 				}
-				break;
-				
-			case KeyCode.R:
-				Spout.receiveTexture(sharingName);
 				break;
 			
 			case KeyCode.S:

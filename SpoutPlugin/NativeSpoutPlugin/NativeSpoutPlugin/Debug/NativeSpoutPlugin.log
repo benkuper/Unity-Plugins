@@ -1,23 +1,5 @@
-﻿Build started 04/06/2014 09:44:09.
-     1>Project "D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ID:\Documents\Ressources\Libraries\pthread\include /ID:\Documents\Ressources\SDKs\SpoutSDK /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D NATIVESPOUTPLUGIN_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt NativeSpoutPlugin.cpp
-         NativeSpoutPlugin.cpp
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin\Debug\NativeSpoutPlugin.dll" /INCREMENTAL /NOLOGO opengl32.lib glu32.lib winmm.lib d3d9.lib d3d11.lib D:\Documents\Ressources\Libraries\pthread\lib\x86\pthreadVC2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin\Debug\NativeSpoutPlugin.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin\Debug\NativeSpoutPlugin.lib" /MACHINE:X86 /DLL Debug\spoutDirectX.obj
-         Debug\spoutGLext.obj
-         Debug\spoutInterop.obj
-         Debug\spoutMap.obj
-         Debug\spoutSenders.obj
-         Debug\dllmain.obj
-         Debug\NativeSpoutPlugin.obj
-         NativeSpoutPlugin.vcxproj -> D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin\Debug\NativeSpoutPlugin.dll
-       PostBuildEvent:
-         copy D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin\Debug\NativeSpoutPlugin.dll D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin\\..\..\UnitySpoutDemo\Assets\Plugins
-         :VCEnd
-                 1 file(s) copied.
-     1>Done Building Project "D:\Documents\Perso\Projects\Unity\UnityPlugins\SpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin\NativeSpoutPlugin.vcxproj" (Build target(s)).
+﻿Build started 04/06/2014 16:09:45.
 
 Build succeeded.
 
-Time Elapsed 00:00:01.79
+Time Elapsed 00:00:00.01

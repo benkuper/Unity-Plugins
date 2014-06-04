@@ -1,9 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Spout.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\SpoutSender.cs">
     <Files>
-      <File FileName="Assets\Spout.cs" Line="49" Column="22" />
-      <File FileName="Assets\SpoutDX11.cs" Line="94" Column="41" />
+      <File FileName="Assets\SpoutDX11.cs" Line="18" Column="26" />
+      <File FileName="Assets\Spout.cs" Line="1" Column="1" />
+      <File FileName="Assets\SpoutSender.cs" Line="12" Column="41" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

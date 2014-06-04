@@ -39,7 +39,7 @@ extern "C" int EXPORT_API shareDX11(char * senderName, ID3D11Texture2D * texture
 	texturePointer->GetDesc(&td);
 	td.BindFlags |=  D3D11_BIND_RENDER_TARGET;
 	td.MiscFlags =  D3D11_RESOURCE_MISC_SHARED;
-	//td.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	td.Format = DXGI_FORMAT_R8G8B8A8_UNORM; //force format
 
 	// Create a new shared texture with the same properties
 	g_D3D11Device->CreateTexture2D(&td, NULL, &sendingTexture);
@@ -47,11 +47,12 @@ extern "C" int EXPORT_API shareDX11(char * senderName, ID3D11Texture2D * texture
 	createSenderFromSharedHandle(senderName, sharedHandle,td);
 	
 	//Loopback test
+	/*
 	ID3D11ShaderResourceView * resourceView;
 	ID3D11Resource * tempResource11;
 	g_D3D11Device->OpenSharedResource(sharedHandle, __uuidof(ID3D11Resource), (void**)(&tempResource11));
 	g_D3D11Device->CreateShaderResourceView(tempResource11,NULL, &resourceView);
-	
+	*/
 	//UnitySharingStarted(0,resourceView,td.Width,td.Height);
 
 	return 2;
