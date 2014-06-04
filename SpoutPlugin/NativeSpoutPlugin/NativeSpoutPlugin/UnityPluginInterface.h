@@ -206,7 +206,6 @@ static void SetGraphicsDeviceD3D9 (IDirect3DDevice9* device, GfxDeviceEventType 
 static ID3D11Device* g_D3D11Device;
 // Global Variables
 ID3D11DeviceContext*    g_pImmediateContext = NULL;
-ID3D11Texture2D*		g_pSharedTexture = NULL; //A texture we want to share with the rest of the world !!!
 
 static void SetGraphicsDeviceD3D11 (ID3D11Device* device, GfxDeviceEventType eventType)
 {

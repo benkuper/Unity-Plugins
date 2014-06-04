@@ -14,12 +14,13 @@ public class SpoutDX11 : MonoBehaviour {
 	Color[] colors;
 	
 	bool sharing;
+	public bool updateSpout;
 	
 	// Use this for initialization
 	void Start () {
 		
 		Spout.init();
-		Spout.addListener(textureShared);
+		Spout.addListener(textureShared,textureStopped);
 		
 		sendTex = new Texture2D(300,200,TextureFormat.RGBA32,false);
 		colors = sendTex.GetPixels();
@@ -30,11 +31,14 @@ public class SpoutDX11 : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(updateSpout) Spout.update();
+		
 		if(sharing)
 		{
 			fillTexture();
 			Spout.updateTexture(sharingName,sendTex);
 		}
+		
 	}
 	
 	void fillTexture()
@@ -64,9 +68,13 @@ public class SpoutDX11 : MonoBehaviour {
 				}
 				break;
 				
-		case KeyCode.R:
-			Spout.receiveTexture(sharingName);
-			break;
+			case KeyCode.R:
+				Spout.receiveTexture(sharingName);
+				break;
+			
+			case KeyCode.S:
+				Spout.startReceiving();
+				break;
 		}
 		
 	}
@@ -74,14 +82,21 @@ public class SpoutDX11 : MonoBehaviour {
 	void OnApplicationQuit()
 	{
 		Debug.Log("Cleanup !");
-		Spout.stopSharing(sharingName);
+		Spout.clean();
 	}
 	
-	public void textureShared(Texture2D sharedTexture)
+	public void textureShared(string senderName, Texture2D sharedTexture)
 	{
-		Debug.Log ("texture shared !"+sharedTexture.width+", "+sharedTexture.height+", "+sharedTexture.format);
-		receiveTex = sharedTexture;
+		Debug.Log ("texture shared, "+senderName+"< >"+sharingName+" = "+(senderName == sharingName));
 		
+		if(sharingName != senderName) return;
+		receiveTex = sharedTexture;
 		renderer.material.mainTexture = receiveTex;
+	}
+	
+	public void textureStopped(string senderName)
+	{
+		if(sharingName != senderName) return;
+		renderer.material.mainTexture = null;
 	}
 }

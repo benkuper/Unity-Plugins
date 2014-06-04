@@ -41,7 +41,17 @@ extern "C" void EXPORT_API SpoutCleanup()
 
 }
 
+HANDLE getSharedHandleForTexture(ID3D11Texture2D * texToShare)
+{
+	HANDLE sharedHandle;
 
+	IDXGIResource* pOtherResource(NULL);
+	texToShare->QueryInterface( __uuidof(IDXGIResource), (void**)&pOtherResource );
+	pOtherResource->GetSharedHandle(&sharedHandle);
+	pOtherResource->Release();
+
+	return sharedHandle;
+}
 
 extern "C" void createSenderFromSharedHandle(char * senderName, HANDLE sharedHandle, D3D11_TEXTURE2D_DESC td)
 {
@@ -65,48 +75,6 @@ extern "C" void createSenderFromSharedHandle(char * senderName, HANDLE sharedHan
 
 		bInitialized = true; // flag that a sender has been created for update
 }
-
-extern "C" void EXPORT_API updateTexture(char* senderName, ID3D11Texture2D * texturePointer)
-{
-	
-	if(g_pImmediateContext == NULL) UnityLog("Immediate context is null");
-	if((ID3D11Resource *)texturePointer == NULL) UnityLog("Resource is null");
-
-	//UnityLog("Update in plugin");
-	D3D11_TEXTURE2D_DESC td;
-	texturePointer->GetDesc(&td);
-
-	// SPOUT
-	// Check the texture against the global size used when the sender was created
-	// and update the sender info if it has changed
-	if(bInitialized) {
-		if(td.Width != g_width || td.Height != g_height) {
-			g_width			= td.Width;
-			g_height		= td.Height;
-			g_info.width	= (unsigned __int32)g_width;
-			g_info.height	= (unsigned __int32)g_height;
-			// This assumes that the sharehandle in the info structure remains 
-			// the same as the texture this could be checked as well
-			spout.UpdateSender(senderName,g_width,g_height,g_shareHandle,g_info.format);
-		}
-	}
-
-
-	//make it a shared texture, so add a flag
-	/*
-	td.MiscFlags |= D3D11_RESOURCE_MISC_SHARED;
-	td.MipLevels = 1;
-	td.Usage = D3D11_USAGE_DEFAULT;
-	td.ArraySize = 1;
-
-	// Note to Frederik : Why 0 ? From Unity, BindFlags is set to 8 (SHADER_RESOURCE)
-	td.BindFlags = 0; //D3D11_BIND_RENDER_TARGET;
-	td.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	*/
-	g_pImmediateContext->CopyResource(g_pSharedTexture,texturePointer);
-	g_pImmediateContext->Flush();
-}
-
 
 
 //DX9 Compat
