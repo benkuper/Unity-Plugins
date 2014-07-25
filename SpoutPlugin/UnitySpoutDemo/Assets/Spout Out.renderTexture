@@ -5,11 +5,11 @@ RenderTexture:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: New Render Texture
-  m_Width: 600
-  m_Height: 300
-  m_AntiAliasing: 2
-  m_DepthFormat: 0
+  m_Name: Spout Out
+  m_Width: 500
+  m_Height: 400
+  m_AntiAliasing: 1
+  m_DepthFormat: 2
   m_ColorFormat: 0
   m_MipMap: 0
   m_GenerateMips: 1
