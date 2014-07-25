@@ -16,6 +16,7 @@ public class Spout2Receiver : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//sharingName = sName;
+		
 	}
 	
 	public void texShared(TextureInfo texInfo)

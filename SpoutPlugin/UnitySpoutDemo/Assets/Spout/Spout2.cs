@@ -60,9 +60,12 @@ public class Spout2 : MonoBehaviour {
 	
 	void Update()
 	{	
-
+		
+		if(isReceiving) checkReceivers();
+		
 		foreach(TextureInfo s in newSenders)
 		{
+			activeSenders.Add (s);
 			if(texSharedDelegate != null) texSharedDelegate(s);
 		}
 		
@@ -70,17 +73,28 @@ public class Spout2 : MonoBehaviour {
 		
 		foreach(TextureInfo s in stoppedSenders)
 		{
+			foreach(TextureInfo t in activeSenders)
+			{
+				if(s.name == t.name)
+				{
+					activeSenders.Remove(t);
+					break;
+				}
+			}	
+			
 			if(senderStoppedDelegate != null) senderStoppedDelegate(s);
 		}
 		
 		stoppedSenders.Clear ();
 	}
 	
+	/*
 	void OnApplicationQuit()
 	{
-		Debug.Log ("Stop Receiving");
-		Spout2.stopReceiving();
+		//Debug.Log ("Stop Receiving");
+		//Spout2.stopReceiving();
 	}
+	*/
 	
 	public static bool CreateSender(string sharingName, Texture tex)
 	{
@@ -111,6 +125,9 @@ public class Spout2 : MonoBehaviour {
 	[DllImport ("NativeSpoutPlugin")]
 	public static extern void initDebugConsole();
 	
+	[DllImport ("NativeSpoutPlugin")]
+	private static extern void checkReceivers();
+	
 	
 	[DllImport ("NativeSpoutPlugin", EntryPoint="createSender")]
 	private static extern bool createSenderNative (string sharingName, IntPtr texture);
@@ -131,10 +148,16 @@ public class Spout2 : MonoBehaviour {
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	public delegate void SpoutSenderStoppedDelegate(string senderName);
 	
+	
 	[DllImport ("NativeSpoutPlugin", EntryPoint="startReceiving")]
 	private static extern bool startReceivingNative(IntPtr senderUpdateHandler,IntPtr senderStartedHandler,IntPtr senderStoppedHandler);
+	
+	/*
 	[DllImport ("NativeSpoutPlugin")]
 	public static extern void stopReceiving();
+	*/
+	
+	
 	
 	public static void startReceiving()
 	{
@@ -165,9 +188,7 @@ public class Spout2 : MonoBehaviour {
 		Debug.Log("Sender started, sender name : "+senderName);
 		TextureInfo texInfo = new TextureInfo(senderName);
 		texInfo.setInfos(textureWidth,textureHeight,resourceView);
-		
 		newSenders.Add(texInfo);
-		activeSenders.Add (texInfo);
 		
 		Debug.Log (activeSenders.Count);
 	}
@@ -178,14 +199,7 @@ public class Spout2 : MonoBehaviour {
 		TextureInfo texInfo = new TextureInfo(senderName);
 		
 		stoppedSenders.Add (texInfo);
-		foreach(TextureInfo t in activeSenders)
-		{
-			if(t.name == texInfo.name)
-			{
-				activeSenders.Remove(t);
-				break;
-			}
-		}		
+			
 		
 		Debug.Log ("num sender after delete :"+activeSenders.Count);
 	}

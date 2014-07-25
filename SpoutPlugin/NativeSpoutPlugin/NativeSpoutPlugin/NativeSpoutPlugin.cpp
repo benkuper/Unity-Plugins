@@ -1,7 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "UnityPluginInterface.h"
-#include "pthread.h"
+//#include "pthread.h"
 
 #include "spoutDirectX.h"
 #include "spoutGLDXinterop.h"
@@ -216,27 +216,18 @@ extern "C" int EXPORT_API getNumSenders()
 }
 
 
-pthread_t receiveThread;
-bool doReceive;
+
 int lastSendersCount = 0;
 
-void * receiveThreadLoop(void * data)
+char senderNames[32][256];
+
+unsigned int w;
+unsigned int h;
+HANDLE sHandle;
+
+extern "C" void EXPORT_API checkReceivers()
 {
-	//UnityLog("receive Thread Loop start !\n");
-	printf("Unity Thread loop start !\n");
-
-	
-	char senderNames[32][256];
-
-	unsigned int w;
-	unsigned int h;
-	HANDLE sHandle;
-
-
-	while(doReceive)
-	{
-		
-		int numSenders = sender.GetSenderCount();
+	int numSenders = sender.GetSenderCount();
 
 		if(numSenders != lastSendersCount)
 		{
@@ -336,29 +327,55 @@ void * receiveThreadLoop(void * data)
 		
 
 		lastSendersCount = numSenders;
+}
+
+/*
+pthread_t receiveThread;
+bool doReceive;
+void * receiveThreadLoop(void * data)
+{
+	//UnityLog("receive Thread Loop start !\n");
+	printf("Unity Thread loop start !\n");
+	Sleep(1000);
+
+	while(doReceive)
+	{
+		
+		checkReceivers();
 		
 		Sleep(50);
 	}
 	
-
+	printf("Exit receive Thread\n");
 	
 	return 0;
 }
+*/
 
+
+/*
 extern "C" void EXPORT_API stopReceiving()
 {
-	doReceive = false;
+	printf("SpoutNative :: Stop Receiving\n");
+	if(doReceive)
+	{
+		doReceive = false;
+		pthread_cancel(receiveThread);
+		
+	}
 }
+*/
 
 extern "C" bool EXPORT_API startReceiving(SpoutSenderUpdatePtr senderUpdateHandler,SpoutSenderStartedPtr senderStartedHandler,SpoutSenderStoppedPtr senderStoppedHandler) 
 {
-	printf("SpoutNative :: Start Receiving");
+	printf("SpoutNative :: Start Receiving\n");
+
 	//UnityLog("Start Receiving");
 	UnitySenderUpdate = senderUpdateHandler;
 	UnitySenderStarted = senderStartedHandler;
 	UnitySenderStopped = senderStoppedHandler;
 	
-
+	/*
 	if(doReceive)
 	{
 		pthread_join(receiveThread, NULL);
@@ -367,6 +384,7 @@ extern "C" bool EXPORT_API startReceiving(SpoutSenderUpdatePtr senderUpdateHandl
 
 	doReceive = true;
 	int ret = pthread_create(&receiveThread,NULL, receiveThreadLoop,NULL);
+	*/
 
 	lastSendersCount = 0;
 	

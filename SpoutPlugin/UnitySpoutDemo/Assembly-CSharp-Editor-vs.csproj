@@ -47,6 +47,9 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Spout\Editor\Spout2ReceiverEditor.cs" />
+ <Reference Include="Assembly-UnityScript-firstpass">
+ <HintPath>D:/Documents/Perso/Projects/Unity/UnityPlugins/SpoutPlugin/UnitySpoutDemo/Library/ScriptAssemblies/Assembly-UnityScript-firstpass.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
  </Reference>

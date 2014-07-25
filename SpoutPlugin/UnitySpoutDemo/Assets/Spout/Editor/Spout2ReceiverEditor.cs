@@ -37,7 +37,6 @@ public class Spout2ReceiverEditor : Editor {
 		options = new string[Spout2.activeSenders.Count+1];
 		options[0] = "Any";
 		
-		
 		for(int i=0;i<Spout2.activeSenders.Count;i++)
 		{
 			options[i+1] = Spout2.activeSenders[i].name;
