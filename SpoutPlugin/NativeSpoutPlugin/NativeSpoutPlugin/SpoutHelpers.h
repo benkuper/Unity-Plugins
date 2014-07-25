@@ -11,9 +11,7 @@
 // between a sender and receiver
 
 
-#include "spoutSenders.h"	// Spout sender management support
-#include "spoutMap.h"		// memory map creation and management
-#include "spoutInterop.h"
+#include "SpoutDirectX.h"
 
 // GLOBAL VARIABLES :: need to be changed so multiple senders / receivers can co exist
 bool					bInitialized = false;
