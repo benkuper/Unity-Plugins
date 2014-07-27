@@ -9,7 +9,7 @@ public class Spout2Sender : MonoBehaviour {
 	public bool sending;
 	// Use this for initialization
 	void Start () {
-		
+		Spout2.initDebugConsole();
 	}
 	
 	
