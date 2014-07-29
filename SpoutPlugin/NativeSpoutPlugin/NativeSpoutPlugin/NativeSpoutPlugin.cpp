@@ -10,9 +10,9 @@
 
 HWND hWnd;
 
-spoutSenderNames sender;
-spoutGLDXinterop interop;
-spoutDirectX sdx;
+spoutSenderNames * sender;
+spoutGLDXinterop * interop;
+spoutDirectX * sdx;
 
 ID3D11Device * d3d11;
 ID3D11DeviceContext * context;
@@ -25,22 +25,8 @@ HANDLE sharedSendingHandle;
 using namespace std;
 
 
-typedef void (*SpoutStartPtr)(char * senderName,ID3D11ShaderResourceView * resourceView ,int width,int height);
-typedef void (*SpoutStopPtr)(char * senderName);
-SpoutStartPtr UnitySharingStarted;
-SpoutStopPtr UnitySharingStopped;
-
-
-extern "C"  void EXPORT_API SetSpoutHandlers( SpoutStartPtr sharingStartedHandler, SpoutStopPtr sharingStoppedHandler )
-{
-        UnitySharingStarted = sharingStartedHandler;
-		UnitySharingStopped = sharingStoppedHandler;
-}
-
-
 extern "C" void EXPORT_API initDebugConsole()
 {
-	
 	AllocConsole();
     freopen("CONIN$",  "r", stdin);
     freopen("CONOUT$", "w", stdout);
@@ -94,18 +80,9 @@ extern "C" bool EXPORT_API init()
 		return false;
 	}
 
-	//sdx.g_pImmediateContext = g_pImmediateContext;
-
-	/*
-	d3d11 = sdx.CreateDX11device(hWnd);
-	if(d3d11 == NULL)
-	{
-		printf("SpoutNative :: D3D11Device NULL\n");
-		return false;
-	}
-
-	d3d11->GetImmediateContext(&context);
-	*/
+	sender	  = new spoutSenderNames;
+	interop =  new spoutGLDXinterop;
+	sdx = new spoutDirectX;
 
 	return true;
 }
@@ -116,40 +93,37 @@ extern "C" bool EXPORT_API createSender(char * senderName, ID3D11Texture2D * tex
 {
 	printf("SpoutNative :: create Sender %s\n",senderName);
 	
-	
+	printf("Check TexturePointer : %i\n",texturePointer);
+	if(texturePointer == nullptr) 
+	{
+		printf("## Texture Pointer null, create Sender fail");
+		return false;
+	}
+
 	D3D11_TEXTURE2D_DESC td;
 	texturePointer->GetDesc(&td);
 
-	/*
-	td.BindFlags |=  D3D11_BIND_RENDER_TARGET;
-	td.MiscFlags =  D3D11_RESOURCE_MISC_SHARED;
-
-
-	td.Format = texFormat; //force format
-	printf("texFormat %i %i\n",texFormat,td.Format);
-
-	*/
-
-	/*
-	g_D3D11Device->CreateTexture2D(&td, NULL, &sendingTexture);
-	sharedSendingHandle = getSharedHandleForTexture(sendingTexture);
-	*/
-
 	//sender.RegisterSenderName(senderName);
-	bool senderResult = sender.CreateSender(senderName,td.Width,td.Height,sharedSendingHandle);//td.Format);
+	bool senderResult = sender->CreateSender(senderName,td.Width,td.Height,sharedSendingHandle);//td.Format);
 	printf(">> Create sender with sender names : %i\n",senderResult);	
 
+	printf("Check 3\n");
+
 	//sharedSendingHandle = NULL;
-	bool texResult = sdx.CreateSharedDX11Texture(g_D3D11Device,td.Width,td.Height,texFormat,&sendingTexture,sharedSendingHandle);
+	bool texResult = sdx->CreateSharedDX11Texture(g_D3D11Device,td.Width,td.Height,texFormat,&sendingTexture,sharedSendingHandle);
 	printf(">> Create shared Texture with SDX : %i\n",texResult);
 	
-	
+	printf("Check 4\n");
 
 	g_pImmediateContext->CopyResource(sendingTexture,texturePointer);
 	g_pImmediateContext->Flush();
 
+	printf("Check 5\n");
+
 	printf("SendSharingHandle after DX11TexCreation : %i\n",sharedSendingHandle);
-	sender.UpdateSender(senderName,td.Width,td.Height,sharedSendingHandle);
+	sender->UpdateSender(senderName,td.Width,td.Height,sharedSendingHandle);
+
+	printf("Check 6\n");
 	/*
 	// Get the description of the passed texture
 	
@@ -176,6 +150,19 @@ extern "C" bool EXPORT_API createSender(char * senderName, ID3D11Texture2D * tex
 extern "C" bool EXPORT_API updateSender(char* senderName, ID3D11Texture2D * texturePointer)
 {
 	
+	if(sendingTexture == nullptr)
+	{
+		printf("### SendingTexture pointer is null, CreateSender() must have failed, trying now");
+		createSender(senderName,texturePointer);
+		return false;
+	}
+	
+	if(sendingTexture == nullptr)
+	{
+		printf("### TexturePointer from Unity is null.");
+		return false;
+	}
+
 	g_pImmediateContext->CopyResource(sendingTexture,texturePointer);
 	g_pImmediateContext->Flush();
 	
@@ -183,7 +170,7 @@ extern "C" bool EXPORT_API updateSender(char* senderName, ID3D11Texture2D * text
 	texturePointer->GetDesc(&td);
 	//printf("update texFormat %i %i\n",texFormat,td.Format);
 
-	bool result = sender.UpdateSender(senderName,td.Width,td.Height,sharedSendingHandle);
+	bool result = sender->UpdateSender(senderName,td.Width,td.Height,sharedSendingHandle);
 	//printf("updateSender result : %i\n",result);
 	
 	return result;
@@ -195,8 +182,8 @@ extern "C" bool EXPORT_API updateSender(char* senderName, ID3D11Texture2D * text
 extern "C" void EXPORT_API closeSender(char * senderName)
 {
 	printf("Close Sender : %s\n",senderName);
-	sender.CloseSender(senderName);
-	sender.ReleaseSenderName(senderName);
+	sender->CloseSender(senderName);
+	sender->ReleaseSenderName(senderName);
 }
 
 
@@ -212,7 +199,7 @@ SpoutSenderStoppedPtr UnitySenderStopped;
 
 extern "C" int EXPORT_API getNumSenders()
 {
-	return sender.GetSenderCount();
+	return sender->GetSenderCount();
 }
 
 
@@ -227,7 +214,7 @@ HANDLE sHandle;
 
 extern "C" void EXPORT_API checkReceivers()
 {
-	int numSenders = sender.GetSenderCount();
+	int numSenders = sender->GetSenderCount();
 
 		if(numSenders != lastSendersCount)
 		{
@@ -255,7 +242,7 @@ extern "C" void EXPORT_API checkReceivers()
 			for(i=0;i<numSenders;i++)
 			{
 				
-				sender.GetSenderNameInfo(i,newNames[i],256,w,h,sHandle);
+				sender->GetSenderNameInfo(i,newNames[i],256,w,h,sHandle);
 				//spout.getSenderNameForIndex(i,newNames[i]);
 
 				//printf("%s | ",newNames[i]);
@@ -283,7 +270,7 @@ extern "C" void EXPORT_API checkReceivers()
 
 				if(!found) 
 				{
-					sender.GetSenderNameInfo(i,newNames[i],256,w,h,sHandle);
+					sender->GetSenderNameInfo(i,newNames[i],256,w,h,sHandle);
 
 					ID3D11Resource * tempResource11;
 					ID3D11ShaderResourceView * rView;
@@ -329,42 +316,6 @@ extern "C" void EXPORT_API checkReceivers()
 		lastSendersCount = numSenders;
 }
 
-/*
-pthread_t receiveThread;
-bool doReceive;
-void * receiveThreadLoop(void * data)
-{
-	//UnityLog("receive Thread Loop start !\n");
-	printf("Unity Thread loop start !\n");
-	Sleep(1000);
-
-	while(doReceive)
-	{
-		
-		checkReceivers();
-		
-		Sleep(50);
-	}
-	
-	printf("Exit receive Thread\n");
-	
-	return 0;
-}
-*/
-
-
-/*
-extern "C" void EXPORT_API stopReceiving()
-{
-	printf("SpoutNative :: Stop Receiving\n");
-	if(doReceive)
-	{
-		doReceive = false;
-		pthread_cancel(receiveThread);
-		
-	}
-}
-*/
 
 extern "C" bool EXPORT_API startReceiving(SpoutSenderUpdatePtr senderUpdateHandler,SpoutSenderStartedPtr senderStartedHandler,SpoutSenderStoppedPtr senderStoppedHandler) 
 {
@@ -375,24 +326,24 @@ extern "C" bool EXPORT_API startReceiving(SpoutSenderUpdatePtr senderUpdateHandl
 	UnitySenderStarted = senderStartedHandler;
 	UnitySenderStopped = senderStoppedHandler;
 	
-	/*
-	if(doReceive)
-	{
-		pthread_join(receiveThread, NULL);
-		doReceive = false;
-	}
-
-	doReceive = true;
-	int ret = pthread_create(&receiveThread,NULL, receiveThreadLoop,NULL);
-	*/
-
 	lastSendersCount = 0;
-	
-	
 
 	return true;//ret == 0; //success
 }
 
+
+extern "C" void EXPORT_API clean()
+{
+	FreeConsole();
+
+	delete d3d11;
+	delete context;
+
+	delete sender;
+	delete sdx;
+	delete interop;
+
+}
 
 
 

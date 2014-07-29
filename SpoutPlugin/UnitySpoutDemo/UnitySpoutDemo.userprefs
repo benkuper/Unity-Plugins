@@ -1,10 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Spout\Spout2Sender.cs">
     <Files>
-      <File FileName="Assets\Spout\Spout2Sender.cs" Line="12" Column="29" />
-      <File FileName="Assets\Spout\Spout2.cs" Line="1" Column="1" />
-      <File FileName="Assets\Spout\Spout2Sender.cs" Line="46" Column="1" />
+      <File FileName="Assets\Spout\Spout2Sender.cs" Line="23" Column="3" />
+      <File FileName="Assets\Spout\Spout2.cs" Line="94" Column="1" />
+      <File FileName="Assets\Spout\TextureInfo.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

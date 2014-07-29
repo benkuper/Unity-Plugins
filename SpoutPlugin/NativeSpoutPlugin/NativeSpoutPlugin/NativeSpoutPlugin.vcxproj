@@ -93,7 +93,9 @@
       <AdditionalDependencies>opengl32.lib;glu32.lib;winmm.lib;d3d9.lib;d3d11.lib;D:\Documents\Ressources\Libraries\pthread\lib\x86\pthreadVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Assets\Plugins</Command>
+      <Command>copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Assets\Plugins
+copy $(TargetPath) $(SolutionDir)\..\..\bin\x86
+copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Export\x86\SenderDemo_32bit_Data\Plugins</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -111,7 +113,9 @@
       <AdditionalDependencies>opengl32.lib;glu32.lib;winmm.lib;d3d9.lib;d3d11.lib;D:\Documents\Ressources\Libraries\pthread\lib\x86\pthreadVC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Assets\Plugins</Command>
+      <Command>copy $(TargetPath) $(SolutionDir)\..\..\bin\x64
+copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Export\x64\SenderDemo_64bit_Data\Plugins
+copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Export\x64\ReceiverDemo_64bit_Data\Plugins</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -133,7 +137,9 @@
       <AdditionalDependencies>opengl32.lib;glu32.lib;winmm.lib;d3d9.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Assets\Plugins</Command>
+      <Command>copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Assets\Plugins
+copy $(TargetPath) $(SolutionDir)\..\..\bin\x86
+copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Export\x86\SenderDemo_32bit_Data\Plugins</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,7 +161,9 @@
       <AdditionalDependencies>opengl32.lib;glu32.lib;winmm.lib;d3d9.lib;d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Assets\Plugins</Command>
+      <Command>copy $(TargetPath) $(SolutionDir)\..\..\bin\x64
+copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Export\x64\SenderDemo_64bit_Data\Plugins
+copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Export\x64\ReceiverDemo_64bit_Data\Plugins</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

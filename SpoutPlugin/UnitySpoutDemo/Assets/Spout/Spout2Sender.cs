@@ -6,38 +6,24 @@ public class Spout2Sender : MonoBehaviour {
 	public string sharingName;
 	public Texture texture;
 	
-	public bool sending;
+	public bool debugConsole = true;
+	
 	// Use this for initialization
-	void Start () {
-		Spout2.initDebugConsole();
+	void Awake () {
+		if(debugConsole) Spout2.initDebugConsole();
 	}
 	
-	
-	// Update is called once per frame
-	void Update () {
-		if(Input.GetKeyDown(KeyCode.Space))
-		{
-			if(!sending)
-			{
-				Spout2.CreateSender(sharingName,texture);
-				sending = true;
-			}
-		}
-		
-		if(Input.GetKeyDown(KeyCode.Escape))
-		{
-			if(sending)
-			{
-				Spout2.CloseSender(sharingName);
-				sending = false;
-			}
-		}
-		
-		//Debug.Log ("update !");
-		if(sending) Spout2.UpdateSender(sharingName,texture);	
+	void Start()
+	{
+		Spout2.CreateSender(sharingName,texture);
 	}
 	
-	void OnApplicationQuit()
+	void Update()
+	{
+		Spout2.UpdateSender(sharingName,texture);	
+	}
+	
+	void OnDestroy()
 	{
 		Spout2.CloseSender(sharingName);
 	}

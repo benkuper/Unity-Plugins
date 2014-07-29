@@ -41,7 +41,7 @@ public class Spout2 : MonoBehaviour {
 				
 		startReceiving ();
 		
-		spoutObject = new GameObject(); //for automatic update
+		spoutObject = new GameObject("Spout"); //for automatic update
 		spoutObject.AddComponent<Spout2>();
 		
 		return isInit;
@@ -52,7 +52,6 @@ public class Spout2 : MonoBehaviour {
 	public static void addListener(TextureSharedDelegate sharedCallback, SenderStoppedDelegate stoppedCallback )
 	{
 		if(!isInit) Init ();
-		Debug.Log ("Add Listener !");
 		texSharedDelegate += sharedCallback;
 		senderStoppedDelegate += stoppedCallback;
 	}	
@@ -88,17 +87,18 @@ public class Spout2 : MonoBehaviour {
 		stoppedSenders.Clear ();
 	}
 	
-	/*
-	void OnApplicationQuit()
+	
+	void OnDestroy()
 	{
 		//Debug.Log ("Stop Receiving");
-		//Spout2.stopReceiving();
+		Spout2.clean();
 	}
-	*/
+	
 	
 	public static bool CreateSender(string sharingName, Texture tex)
 	{
 		if(!isInit) Init();
+		Debug.Log ("Tex Native Pointer :"+tex.GetNativeTexturePtr());
 		return createSenderNative(sharingName, tex.GetNativeTexturePtr());
 	}
 	
@@ -129,6 +129,7 @@ public class Spout2 : MonoBehaviour {
 	private static extern void checkReceivers();
 	
 	
+	
 	[DllImport ("NativeSpoutPlugin", EntryPoint="createSender")]
 	private static extern bool createSenderNative (string sharingName, IntPtr texture);
 	
@@ -138,6 +139,8 @@ public class Spout2 : MonoBehaviour {
 	[DllImport ("NativeSpoutPlugin", EntryPoint="closeSender")]
 	public static extern bool CloseSender (string sharingName);
 	
+	[DllImport ("NativeSpoutPlugin")]
+	private static extern void clean();
 	
 	//Receiving Thread init
 	
@@ -185,23 +188,18 @@ public class Spout2 : MonoBehaviour {
 	
 	public static void SenderStarted(string senderName, IntPtr resourceView,int textureWidth, int textureHeight)
 	{
-		Debug.Log("Sender started, sender name : "+senderName);
+		//Debug.Log("Sender started, sender name : "+senderName);
 		TextureInfo texInfo = new TextureInfo(senderName);
 		texInfo.setInfos(textureWidth,textureHeight,resourceView);
 		newSenders.Add(texInfo);
 		
-		Debug.Log (activeSenders.Count);
 	}
 	public static void SenderStopped(string senderName)
 	{
-		Debug.Log("Sender stopped, sender name : "+senderName);
-		
+		//Debug.Log("Sender stopped, sender name : "+senderName);
 		TextureInfo texInfo = new TextureInfo(senderName);
 		
 		stoppedSenders.Add (texInfo);
-			
-		
-		Debug.Log ("num sender after delete :"+activeSenders.Count);
 	}
 	
 	
