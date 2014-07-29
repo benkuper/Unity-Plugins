@@ -2,6 +2,9 @@
 This plugin allows Unity to receive and share textures from and to external softwares like Resolume, Adobe AIR, After Effects...
 It has been updated to fully supports the Spout2SDK available here : https://github.com/leadedge/Spout2
 
+### Demos
+The demos are pretty heavy, i have made them available on another server, you can download them there : http://benjamin.kuperberg.fr/download/spout/spout_unity_demos.rar
+
 ### Installation and usage
 Just put the "Spout" script folder inside your Asset folder, and the "NativeSpoutPlugin.dll" in the Assets/Plugins folder.
 Next thing is drop a "Spout2Sender" or "Spout2Receiver" onto objects.
