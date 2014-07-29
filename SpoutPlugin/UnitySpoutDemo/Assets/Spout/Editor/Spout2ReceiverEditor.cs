@@ -1,14 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEditor;
+using System;
 
 [CustomEditor(typeof(Spout2Receiver))]
 [CanEditMultipleObjects]
+[Serializable]
 public class Spout2ReceiverEditor : Editor {
 
 	Spout2Receiver receiver;
-	int _popupIndex = 0;
+	
+	[SerializeField]
+	private int _popupIndex;
+	
 	string[] options;
+	
+	string currentName;
 	
 	void OnEnable()
 	{
@@ -16,44 +23,81 @@ public class Spout2ReceiverEditor : Editor {
 		{
 			receiver = target as Spout2Receiver;
 			Spout2.addListener(texShared,senderStopped);
-			updateOptions ();
+			
+			updateOptions();
 		}
+		
+		//Debug.Log ("Enable popup Index : "+popupIndex);
 	}
 	
 	public void texShared(TextureInfo texInfo)
 	{
+		//Debug.Log ("Editor : senderStarted :"+texInfo.name);
 		updateOptions();
 	}
 	
 	public void senderStopped(TextureInfo texInfo)
 	{
-		Debug.Log ("Editor : senderStopped");
+		//Debug.Log ("Editor : senderStopped :"+texInfo.name);
 		updateOptions();
 	}
 	
-	void updateOptions()
+	void updateOptions(bool assignNewName = true)
 	{
-		Debug.Log ("updateOptions");
-		options = new string[Spout2.activeSenders.Count+1];
+		
+		string oldSharingName = receiver.sharingName;
+		int newPopupIndex = 0;
+		
+		bool found = false;
+		
+		options = new string[Spout2.activeSenders.Count+2];
 		options[0] = "Any";
 		
 		for(int i=0;i<Spout2.activeSenders.Count;i++)
 		{
-			options[i+1] = Spout2.activeSenders[i].name;
+			string currentName = Spout2.activeSenders[i].name;
+			options[i+1] = currentName;
+			if(currentName == oldSharingName && oldSharingName != "Any") 
+			{
+				found = true;
+				newPopupIndex = i+1;
+			}
 		}
 		
-		updateReceiver();
+		options[options.Length-1] = "Other (specify)";
+		
+		if(!found)
+		{
+			newPopupIndex =  (oldSharingName != "Any")?options.Length-1:0;
+		}
+		
+		popupIndex = newPopupIndex;
+		setNameFromPopup();
+		
 	}
 	
 	public override void OnInspectorGUI()
 	{
-		DrawDefaultInspector();
-		popupIndex = EditorGUILayout.Popup("Select texture",popupIndex,options);
+		int selectedIndex = EditorGUILayout.Popup("Select sender",_popupIndex,options);
+		
+		if(selectedIndex == options.Length-1)//other
+		{
+			_popupIndex = selectedIndex; //silent update
+			receiver.sharingName = EditorGUILayout.TextField("Sender name",receiver.sharingName);
+		} else
+		{
+	 		popupIndex = selectedIndex;
+		}
+		
+		receiver.debugConsole =  EditorGUILayout.Toggle("Debug Console",receiver.debugConsole);
 	}
 	
-	void updateReceiver()
+	void setNameFromPopup()
 	{
-		receiver.sharingName = options[popupIndex];
+		if(popupIndex < options.Length -1)
+		{
+			receiver.sharingName = options[popupIndex];
+		}
 	}
 	
 	int popupIndex
@@ -62,7 +106,7 @@ public class Spout2ReceiverEditor : Editor {
 		set {
 			if(popupIndex == value) return;
 			_popupIndex = value;
-			updateReceiver();
+			setNameFromPopup();
 		}
 	}
 }

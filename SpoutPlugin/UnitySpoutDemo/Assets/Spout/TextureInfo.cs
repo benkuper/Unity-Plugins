@@ -31,6 +31,7 @@ public class TextureInfo  {
 			return new Texture2D(10,10);
 		}
 		
+		
 		if(tex == null) tex = Texture2D.CreateExternalTexture(w,h,TextureFormat.RGBA32,false,true,resourceView);
 		
 		return tex;

@@ -11,7 +11,7 @@ PlayerSettings:
   targetResolution: 0
   accelerometerFrequency: 60
   companyName: Ben Kuper
-  productName: Unity Spout Sender 32bit
+  productName: Unity Spout Receiver 64bit
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   defaultScreenWidth: 640

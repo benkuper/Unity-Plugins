@@ -137,6 +137,9 @@ static void SetGraphicsDeviceD3D11 (ID3D11Device* device, GfxDeviceEventType eve
 
 extern "C" void EXPORT_API UnitySetGraphicsDevice (void* device, int deviceType, int eventType)
 {
+	printf("Unity Set Graphics Device : Event type = %i\n",eventType);
+	if(eventType == 1) return;
+
 	// Set device type to -1, i.e. "not recognized by our plugin"
 	g_DeviceType = -1;
 	
@@ -209,6 +212,7 @@ ID3D11DeviceContext*    g_pImmediateContext = NULL;
 
 static void SetGraphicsDeviceD3D11 (ID3D11Device* device, GfxDeviceEventType eventType)
 {
+	printf("Set Graphics Device D3D11 , check : %i",eventType);
 	g_D3D11Device = device;
 	g_D3D11Device->GetImmediateContext(&g_pImmediateContext);
 }

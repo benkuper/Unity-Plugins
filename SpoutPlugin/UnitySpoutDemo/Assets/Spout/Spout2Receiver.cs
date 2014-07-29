@@ -1,21 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
+[Serializable]
 public class Spout2Receiver : MonoBehaviour {
-
-	private string _sharingName = "Any";
+	
+	[SerializeField]
+	private string _sharingName;
+	
 	private Texture2D _texture;
-	public string sName = "Any";
+	
+	public bool debugConsole = false;
 	
 	// Use this for initialization
-	void Start () {
-		Spout2.initDebugConsole();
+	void Awake () {
+		if(debugConsole) Spout2.initDebugConsole();
+	}
+	
+	void Start()
+	{
 		Spout2.addListener(texShared,texStopped);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//sharingName = sName;
 		
 	}
 	
@@ -29,7 +37,15 @@ public class Spout2Receiver : MonoBehaviour {
 	
 	public void  texStopped(TextureInfo texInfo)
 	{
-		if(texInfo.name == _sharingName || sharingName == "Any") texture = null;
+		if(texInfo.name == _sharingName)
+		{
+			
+			texture = null;
+			
+		}else if(sharingName == "Any" && Spout2.activeSenders.Count > 0)
+		{
+			texture = Spout2.activeSenders[Spout2.activeSenders.Count-1].getTexture();
+		}
 	}
 	
 	public Texture2D texture
@@ -37,7 +53,7 @@ public class Spout2Receiver : MonoBehaviour {
 		get { return _texture; }
 		set {
 			_texture = value;
-			if(renderer != null) 
+			if(renderer != null && Application.isPlaying) 
 			{
 				renderer.material.mainTexture = _texture;
 			}
@@ -48,16 +64,25 @@ public class Spout2Receiver : MonoBehaviour {
 	{
 		get { return _sharingName; }
 		set {
-			if(_sharingName == value) return;
+			if(_sharingName == value && sharingName != "Any") return;
 			_sharingName = value;
 			if(sharingName == "Any")
 			{ 
-				texture = Spout2.activeSenders[Spout2.activeSenders.Count-1].getTexture();
+				if(Spout2.activeSenders != null && Spout2.activeSenders.Count > 0)
+				{
+					texture = Spout2.activeSenders[Spout2.activeSenders.Count-1].getTexture();
+				}
 			}else
 			{
+				Debug.Log ("Set sharing name :"+sharingName);
 				TextureInfo texInfo = Spout2.getTextureInfo(sharingName);
 				if(texInfo != null) texture = texInfo.getTexture ();
-				texture = null;
+				else
+				{
+					Debug.LogWarning ("Sender "+sharingName+" does not exist");
+					texture = new Texture2D(10,10);
+				}
+				
 			}
 		}
 	}

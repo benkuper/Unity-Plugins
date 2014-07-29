@@ -28,6 +28,7 @@ public class Spout2 : MonoBehaviour {
 	
 	public static bool Init(bool debug)
 	{
+		
 		if(isInit) return true;	
 		
 		Debug.Log ("Spout Init !");
@@ -39,9 +40,11 @@ public class Spout2 : MonoBehaviour {
 		stoppedSenders = new List<TextureInfo>();
 		activeSenders = new List<TextureInfo>();
 				
+		Debug.Log ("Start receiving");
 		startReceiving ();
 		
-		spoutObject = new GameObject("Spout"); //for automatic update
+		spoutObject = new GameObject("Spout");
+		
 		spoutObject.AddComponent<Spout2>();
 		
 		return isInit;
@@ -79,21 +82,22 @@ public class Spout2 : MonoBehaviour {
 					activeSenders.Remove(t);
 					break;
 				}
-			}	
+			}
 			
+			//Debug.Log ("Stopped sender from Spout2 :"+s.name);
 			if(senderStoppedDelegate != null) senderStoppedDelegate(s);
 		}
 		
-		stoppedSenders.Clear ();
+		stoppedSenders.Clear();
 	}
 	
 	
 	void OnDestroy()
 	{
-		//Debug.Log ("Stop Receiving");
+		isReceiving = false;
 		Spout2.clean();
+		GameObject.Destroy(GameObject.Find ("Spout"));
 	}
-	
 	
 	public static bool CreateSender(string sharingName, Texture tex)
 	{
@@ -110,10 +114,14 @@ public class Spout2 : MonoBehaviour {
 
 	public static TextureInfo getTextureInfo (string sharingName)
 	{
+		if(activeSenders == null) return null;
+		
 		foreach(TextureInfo tex in activeSenders)
 		{
 			if(tex.name == sharingName) return tex;
 		}
+		
+		Debug.Log ("sharing name not found");
 		
 		return null;
 	}	
@@ -127,7 +135,6 @@ public class Spout2 : MonoBehaviour {
 	
 	[DllImport ("NativeSpoutPlugin")]
 	private static extern void checkReceivers();
-	
 	
 	
 	[DllImport ("NativeSpoutPlugin", EntryPoint="createSender")]

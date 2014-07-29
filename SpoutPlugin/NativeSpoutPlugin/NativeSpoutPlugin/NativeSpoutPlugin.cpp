@@ -22,6 +22,7 @@ ID3D11Texture2D * sendingTexture; //todo : find a way to be able to share more t
 DXGI_FORMAT texFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 HANDLE sharedSendingHandle;
 
+
 using namespace std;
 
 
@@ -36,7 +37,7 @@ extern "C" void EXPORT_API initDebugConsole()
 
 
 // ************** UTILS ********************* //
-
+/*
 HANDLE getSharedHandleForTexture(ID3D11Texture2D * texToShare)
 {
 	HANDLE sharedHandle;
@@ -46,8 +47,11 @@ HANDLE getSharedHandleForTexture(ID3D11Texture2D * texToShare)
 	pOtherResource->GetSharedHandle(&sharedHandle);
 	pOtherResource->Release();
 
+	delete pOtherResource;
+
 	return sharedHandle;
 }
+*/
 
 
 BOOL CALLBACK EnumProc(HWND hwnd, LPARAM lParam)
@@ -71,6 +75,7 @@ BOOL CALLBACK EnumProc(HWND hwnd, LPARAM lParam)
 extern "C" bool EXPORT_API init()
 {
 
+	printf("!! Init !!\n");
 	DWORD processID = GetCurrentProcessId();
 	EnumWindows(EnumProc, processID);
 	
@@ -80,9 +85,9 @@ extern "C" bool EXPORT_API init()
 		return false;
 	}
 
-	sender	  = new spoutSenderNames;
-	interop =  new spoutGLDXinterop;
-	sdx = new spoutDirectX;
+	sender		= new spoutSenderNames;
+	interop		= new spoutGLDXinterop;
+	sdx			= new spoutDirectX;
 
 	return true;
 }
@@ -107,42 +112,17 @@ extern "C" bool EXPORT_API createSender(char * senderName, ID3D11Texture2D * tex
 	bool senderResult = sender->CreateSender(senderName,td.Width,td.Height,sharedSendingHandle);//td.Format);
 	printf(">> Create sender with sender names : %i\n",senderResult);	
 
-	printf("Check 3\n");
-
 	//sharedSendingHandle = NULL;
 	bool texResult = sdx->CreateSharedDX11Texture(g_D3D11Device,td.Width,td.Height,texFormat,&sendingTexture,sharedSendingHandle);
 	printf(">> Create shared Texture with SDX : %i\n",texResult);
 	
-	printf("Check 4\n");
 
 	g_pImmediateContext->CopyResource(sendingTexture,texturePointer);
 	g_pImmediateContext->Flush();
 
-	printf("Check 5\n");
 
 	printf("SendSharingHandle after DX11TexCreation : %i\n",sharedSendingHandle);
 	sender->UpdateSender(senderName,td.Width,td.Height,sharedSendingHandle);
-
-	printf("Check 6\n");
-	/*
-	// Get the description of the passed texture
-	
-
-	// Create a new shared texture with the same properties
-	
-	
-	*/
-
-	//bool result = spout.CreateSender(senderName,td.Width,td.Height,td.Format);
-
-	//Loopback test
-	/*
-	ID3D11ShaderResourceView * resourceView;
-	ID3D11Resource * tempResource11;
-	g_D3D11Device->OpenSharedResource(sharedHandle, __uuidof(ID3D11Resource), (void**)(&tempResource11));
-	g_D3D11Device->CreateShaderResourceView(tempResource11,NULL, &resourceView);
-	*/
-	//UnitySharingStarted(0,resourceView,td.Width,td.Height);
 
 	return texResult;
 }
@@ -199,6 +179,7 @@ SpoutSenderStoppedPtr UnitySenderStopped;
 
 extern "C" int EXPORT_API getNumSenders()
 {
+	printf("Get Num Senders\n");
 	return sender->GetSenderCount();
 }
 
@@ -206,7 +187,8 @@ extern "C" int EXPORT_API getNumSenders()
 
 int lastSendersCount = 0;
 
-char senderNames[32][256];
+char (*senderNames)[256];
+char (*newNames)[256];
 
 unsigned int w;
 unsigned int h;
@@ -214,106 +196,98 @@ HANDLE sHandle;
 
 extern "C" void EXPORT_API checkReceivers()
 {
+
+	if(sender == nullptr) return;
+	
+
 	int numSenders = sender->GetSenderCount();
+	
 
-		if(numSenders != lastSendersCount)
+	if(numSenders != lastSendersCount)
+	{
+		printf("Num Senders changed : %i\n",numSenders);
+			
+		UnitySenderUpdate(numSenders);
+
+		int i,j;
+		bool found;
+		
+		printf("Old Sender List :\n");
+		for(i=0;i<lastSendersCount;i++)
 		{
-			printf("Num Senders changed : %i\n",numSenders);
+			printf("\t> %s\n",senderNames[i]);
+		}
 			
-			UnitySenderUpdate(numSenders);
-
-			char newNames[32][256];
-			int i,j;
-			bool found;
-			
-			//printf("\n\n################ SENDER UPDATE ###############\n\n");
-			//printf("> Old senders : ");
-
-			/*
-			for(i=0;i<lastSendersCount;i++)
-			{
-				printf("%s | ",senderNames[i]);
-			}
-			*/
-
-			
-			//printf("\n");
-			//printf("> New senders : ");
-			for(i=0;i<numSenders;i++)
-			{
-				
-				sender->GetSenderNameInfo(i,newNames[i],256,w,h,sHandle);
-				//spout.getSenderNameForIndex(i,newNames[i]);
-
-				//printf("%s | ",newNames[i]);
-			}
-
-			//printf("\n");
-
-			//NEW SENDERS DETECTION
-			//printf("\n** Detecting new senders **\n");
-			for(i=0;i<numSenders;i++)
-			{
-				//printf("Check for : %s  >>> ",newNames[i]);
-				found = false;
-				for(j = 0;j<lastSendersCount;j++)
-				{
-					//printf(" | %s ",senderNames[j]);
-					if(!found && strcmp(newNames[i],senderNames[j]) == 0) 
-					{
-							found = true;
-							printf("(found !) ");
-					}
-				}
-
-				//printf("\nFound ? %i\n",found);
-
-				if(!found) 
-				{
-					sender->GetSenderNameInfo(i,newNames[i],256,w,h,sHandle);
-
-					ID3D11Resource * tempResource11;
-					ID3D11ShaderResourceView * rView;
-
-					HRESULT openResult = g_D3D11Device->OpenSharedResource(sHandle, __uuidof(ID3D11Resource), (void**)(&tempResource11));
-					g_D3D11Device->CreateShaderResourceView(tempResource11,NULL, &rView);
-
-					//UnitySharingStarted(newNames[i],rView,w,h);
-
-					UnitySenderStarted(newNames[i],rView,w,h);
-				}
-			}
-			
-			//SENDER STOP DETECTION
-			//printf("\n** Detecting leaving senders **\n");
-
-			for(int i=0;i<lastSendersCount;i++)
-			{
-				found = false;
-				//printf("Check for : %s  >>> ",senderNames[i]);
-				for(j = 0;j<numSenders;j++)
-				{
-					//printf(" | %s  ",newNames[j]);
-					if(!found && strcmp(senderNames[i],newNames[j]) == 0) 
-					{
-							found = true;
-							//printf("(found !) ");
-					}
-				}
-
-				//printf("\nFound ? %i\n",found);
-				if(!found) UnitySenderStopped(senderNames[i]);
-			}
-			
-			
-
-			memcpy(senderNames,newNames,sizeof(newNames));
-			
+		printf("\nUpdated Sender List :\n");
+		for(i=0;i<numSenders;i++)
+		{
+			sender->GetSenderNameInfo(i,newNames[i],256,w,h,sHandle);
+			printf("\t> %s\n",newNames[i]);
 		}
 
-		
+		//NEW SENDERS DETECTION
+		printf("\nNew Sender Detection, checking against previous sender list :\n");
+		for(i=0;i<numSenders;i++)
+		{
+			printf("\t> %s .... ",newNames[i]);
 
-		lastSendersCount = numSenders;
+			found = false;
+			for(j = 0;j<lastSendersCount;j++)
+			{
+				if(!found && strcmp(newNames[i],senderNames[j]) == 0) 
+				{
+						found = true;
+						printf("found in previous list.\n");
+						break;
+				}
+			}
+
+			
+
+			if(!found) 
+			{
+				printf("not found [New]\n");
+
+				sender->GetSenderNameInfo(i,newNames[i],256,w,h,sHandle);
+
+				ID3D11Resource * tempResource11;
+				ID3D11ShaderResourceView * rView;
+
+				HRESULT openResult = g_D3D11Device->OpenSharedResource(sHandle, __uuidof(ID3D11Resource), (void**)(&tempResource11));
+				g_D3D11Device->CreateShaderResourceView(tempResource11,NULL, &rView);
+
+				printf("\t => Send Started Event with name : %s\n",newNames[i]);
+				UnitySenderStarted(newNames[i],rView,w,h);
+			}
+		}
+			
+		//SENDER STOP DETECTION
+		for(int i=0;i<lastSendersCount;i++)
+		{
+			found = false;
+			for(j = 0;j<numSenders;j++)
+			{
+				if(!found && strcmp(senderNames[i],newNames[j]) == 0) 
+				{
+						found = true;
+				}
+			}
+
+
+			if(!found) 
+			{
+				printf("Send Stopped Event with name : %s\n",senderNames[i]);
+				UnitySenderStopped(senderNames[i]);
+			}
+		}
+
+		for(int i=0;i<numSenders;i++)
+		{
+			memcpy(senderNames[i],newNames[i],sizeof(newNames[i]));
+		}
+	}
+
+	lastSendersCount = numSenders;
 }
 
 
@@ -328,21 +302,37 @@ extern "C" bool EXPORT_API startReceiving(SpoutSenderUpdatePtr senderUpdateHandl
 	
 	lastSendersCount = 0;
 
+	senderNames = new char[32][256];
+	newNames = new char[32][256];
+
 	return true;//ret == 0; //success
 }
 
+bool isCleaned = false;
 
 extern "C" void EXPORT_API clean()
 {
-	FreeConsole();
+	printf("*** clean, already cleaned ? %i ***\n",isCleaned);
+	
+	if(isCleaned) return;
+	
+	
+	delete[] senderNames;
+	delete[] newNames;
+	
 
 	delete d3d11;
 	delete context;
-
+	
+	
 	delete sender;
 	delete sdx;
 	delete interop;
 
+
+	FreeConsole();
+
+	isCleaned = true;
 }
 
 
