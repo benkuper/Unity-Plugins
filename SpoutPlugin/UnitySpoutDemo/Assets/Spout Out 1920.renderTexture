@@ -5,9 +5,9 @@ RenderTexture:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Spout Out
-  m_Width: 500
-  m_Height: 400
+  m_Name: Spout Out 1920
+  m_Width: 1920
+  m_Height: 1080
   m_AntiAliasing: 1
   m_DepthFormat: 2
   m_ColorFormat: 0
