@@ -8,6 +8,7 @@ public class Spout2Sender : MonoBehaviour {
 	
 	public bool debugConsole = true;
 	
+	
 	// Use this for initialization
 	void Awake () {
 		if(debugConsole) Spout2.initDebugConsole();

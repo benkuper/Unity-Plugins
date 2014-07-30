@@ -95,7 +95,8 @@
     <PostBuildEvent>
       <Command>copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Assets\Plugins
 copy $(TargetPath) $(SolutionDir)\..\..\bin\x86
-copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Export\x86\SenderDemo_32bit_Data\Plugins</Command>
+copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Export\x86\SenderDemo_32bit_Data\Plugins
+copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Export\x86\ReceiverDemo_32bit_Data\Plugins</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -139,7 +140,8 @@ copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Export\x64\ReceiverDemo_6
     <PostBuildEvent>
       <Command>copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Assets\Plugins
 copy $(TargetPath) $(SolutionDir)\..\..\bin\x86
-copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Export\x86\SenderDemo_32bit_Data\Plugins</Command>
+copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Export\x86\SenderDemo_32bit_Data\Plugins
+copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Export\x86\ReceiverDemo_32bit_Data\Plugins</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

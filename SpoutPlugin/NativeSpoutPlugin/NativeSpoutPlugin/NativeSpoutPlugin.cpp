@@ -7,6 +7,7 @@
 #include "spoutGLDXinterop.h"
 #include "spoutSenderNames.h"
 
+using namespace std;
 
 HWND hWnd;
 
@@ -22,9 +23,10 @@ ID3D11Texture2D * sendingTexture; //todo : find a way to be able to share more t
 DXGI_FORMAT texFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 HANDLE sharedSendingHandle;
 
-
-using namespace std;
-
+vector<ID3D11Texture2D *> activeTextures;
+vector<HANDLE> activeHandles;
+vector<string> activeNames;
+int  numActiveSenders;
 
 extern "C" void EXPORT_API initDebugConsole()
 {
@@ -78,6 +80,8 @@ extern "C" bool EXPORT_API init()
 	printf("!! Init !!\n");
 	DWORD processID = GetCurrentProcessId();
 	EnumWindows(EnumProc, processID);
+
+
 	
 	if(hWnd == NULL)
 	{
@@ -89,7 +93,21 @@ extern "C" bool EXPORT_API init()
 	interop		= new spoutGLDXinterop;
 	sdx			= new spoutDirectX;
 
+	numActiveSenders = 0;
+
 	return true;
+}
+
+int getIndexForSenderName(char * senderName)
+{
+	//printf("Get Index For Name %s  (%i active Senders) :\n",senderName,numActiveSenders);
+	for(int i=0;i<numActiveSenders;i++)
+	{
+		//printf("\t> %s\n",activeNames[i].c_str());
+		if(strcmp(senderName,activeNames[i].c_str()) == 0) return i;
+	}
+	//printf("\t....Not found\n");
+	return -1;
 }
 
 
@@ -124,22 +142,30 @@ extern "C" bool EXPORT_API createSender(char * senderName, ID3D11Texture2D * tex
 	printf("SendSharingHandle after DX11TexCreation : %i\n",sharedSendingHandle);
 	sender->UpdateSender(senderName,td.Width,td.Height,sharedSendingHandle);
 
+	string sName=  string(senderName);
+	//printf("Registered at index : %i -> %s\n",numActiveSenders,sName.c_str());
+	activeNames.push_back(sName);
+	activeHandles.push_back(sharedSendingHandle);
+	activeTextures.push_back(sendingTexture);
+	numActiveSenders++;
+
+	
+	int senderIndex = getIndexForSenderName(senderName);
+	//printf("Index search test > %i",senderIndex);
+
 	return texResult;
 }
 
 extern "C" bool EXPORT_API updateSender(char* senderName, ID3D11Texture2D * texturePointer)
 {
-	
-	if(sendingTexture == nullptr)
+	int senderIndex = getIndexForSenderName(senderName);
+
+	//printf("Sender index is %i\n",senderIndex);
+
+	if(senderIndex == -1 || sendingTexture == nullptr)
 	{
-		printf("### SendingTexture pointer is null, CreateSender() must have failed, trying now");
+		printf("Sender is not known or badly created, creating one\n");
 		createSender(senderName,texturePointer);
-		return false;
-	}
-	
-	if(sendingTexture == nullptr)
-	{
-		printf("### TexturePointer from Unity is null.");
 		return false;
 	}
 
@@ -161,9 +187,22 @@ extern "C" bool EXPORT_API updateSender(char* senderName, ID3D11Texture2D * text
 
 extern "C" void EXPORT_API closeSender(char * senderName)
 {
+	int senderIndex = getIndexForSenderName(senderName);
+
 	printf("Close Sender : %s\n",senderName);
 	sender->CloseSender(senderName);
 	sender->ReleaseSenderName(senderName);
+
+	if(senderIndex != -1)
+	{
+		activeNames.erase(activeNames.begin()+senderIndex);
+		activeHandles.erase(activeHandles.begin()+senderIndex);
+		activeTextures.erase(activeTextures.begin()+senderIndex);
+		numActiveSenders--;
+	}
+
+	printf("There are now %i senders remaining\n",numActiveSenders,activeNames.size());
+	
 }
 
 
