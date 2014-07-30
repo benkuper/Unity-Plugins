@@ -3,10 +3,10 @@ using System.Collections;
 
 public class Spout2Sender : MonoBehaviour {
 
-	public string sharingName;
+	public string sharingName = "UnitySender";
 	public Texture texture;
 	
-	public bool debugConsole = true;
+	public bool debugConsole = false;
 	
 	
 	// Use this for initialization
@@ -16,12 +16,12 @@ public class Spout2Sender : MonoBehaviour {
 	
 	void Start()
 	{
-		Spout2.CreateSender(sharingName,texture);
+		if(texture != null) Spout2.CreateSender(sharingName,texture);
 	}
 	
 	void Update()
 	{
-		Spout2.UpdateSender(sharingName,texture);	
+		if(texture != null) Spout2.UpdateSender(sharingName,texture);	
 	}
 	
 	void OnDestroy()
