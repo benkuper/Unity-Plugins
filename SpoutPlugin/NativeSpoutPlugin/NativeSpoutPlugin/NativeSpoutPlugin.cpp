@@ -169,14 +169,17 @@ extern "C" bool EXPORT_API updateSender(char* senderName, ID3D11Texture2D * text
 		return false;
 	}
 
-	g_pImmediateContext->CopyResource(sendingTexture,texturePointer);
+	ID3D11Texture2D * targetTex = activeTextures[senderIndex];
+	HANDLE targetHandle = activeHandles[senderIndex];
+
+	g_pImmediateContext->CopyResource(targetTex,texturePointer);
 	g_pImmediateContext->Flush();
 	
 	D3D11_TEXTURE2D_DESC td;
 	texturePointer->GetDesc(&td);
 	//printf("update texFormat %i %i\n",texFormat,td.Format);
 
-	bool result = sender->UpdateSender(senderName,td.Width,td.Height,sharedSendingHandle);
+	bool result = sender->UpdateSender(senderName,td.Width,td.Height,targetHandle);
 	//printf("updateSender result : %i\n",result);
 	
 	return result;
