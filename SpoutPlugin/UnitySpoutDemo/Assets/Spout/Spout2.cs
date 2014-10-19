@@ -102,8 +102,9 @@ public class Spout2 : MonoBehaviour {
 	public static bool CreateSender(string sharingName, Texture tex)
 	{
 		if(!isInit) Init();
-		Debug.Log ("Tex Native Pointer :"+tex.GetNativeTexturePtr());
-		return createSenderNative(sharingName, tex.GetNativeTexturePtr());
+		bool result = createSenderNative(sharingName, tex.GetNativeTexturePtr());
+		if (!result) Debug.LogWarning ("Spout sender creation with name " + sharingName + " failed !");
+		return result;
 	}
 	
 	public static bool UpdateSender(string sharingName, Texture tex)

@@ -5,10 +5,11 @@ public class Spout2Sender : MonoBehaviour {
 
 	public string sharingName = "UnitySender";
 	public Texture texture;
-	
+
 	public bool debugConsole = false;
 	
-	
+	bool senderIsCreated;
+
 	// Use this for initialization
 	void Awake () {
 		if(debugConsole) Spout2.initDebugConsole();
@@ -16,17 +17,17 @@ public class Spout2Sender : MonoBehaviour {
 	
 	void Start()
 	{
-		if(texture != null) Spout2.CreateSender(sharingName,texture);
+		if(texture != null) senderIsCreated = Spout2.CreateSender(sharingName,texture);
 	}
 	
 	void Update()
 	{
-		if(texture != null) Spout2.UpdateSender(sharingName,texture);	
+		if(texture != null && senderIsCreated) Spout2.UpdateSender(sharingName,texture);	
 	}
 	
 	void OnDestroy()
 	{
-		Spout2.CloseSender(sharingName);
+		if(senderIsCreated) Spout2.CloseSender(sharingName);
 	}
 	
 }

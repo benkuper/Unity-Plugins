@@ -32,6 +32,9 @@
     <ClCompile Include="NativeSpoutPlugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\Ressources\SDKs\Spout2SDK\SpoutSDK\Source\SpoutSharedMemory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\Ressources\SDKs\Spout2SDK\SpoutSDK\Source\SpoutDirectX.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -185,6 +185,7 @@ copy $(TargetPath) $(SolutionDir)\..\..\UnitySpoutDemo\Export\x64\ReceiverDemo_6
     <ClCompile Include="..\..\..\..\..\..\..\Ressources\SDKs\Spout2SDK\SpoutSDK\Source\SpoutSDK.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\Ressources\SDKs\Spout2SDK\SpoutSDK\Source\SpoutSender.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\Ressources\SDKs\Spout2SDK\SpoutSDK\Source\SpoutSenderNames.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\Ressources\SDKs\Spout2SDK\SpoutSDK\Source\SpoutSharedMemory.cpp" />
     <ClCompile Include="NativeSpoutPlugin.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -258,8 +258,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sharingName: Unity1
-  texture: {fileID: 8400000, guid: 1ef39a9159fbc0a43911bf9ec1abf193, type: 2}
-  debugConsole: 1
+  texture: {fileID: 8400000, guid: 2e3397a5938e5bb4c9df5a6a8bca144c, type: 2}
+  debugConsole: 0
 --- !u!124 &1443739522
 Behaviour:
   m_ObjectHideFlags: 0
@@ -300,7 +300,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 1ef39a9159fbc0a43911bf9ec1abf193, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: 2e3397a5938e5bb4c9df5a6a8bca144c, type: 2}
   m_TargetDisplay: 0
   m_HDR: 0
   m_OcclusionCulling: 1
@@ -418,7 +418,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sharingName: Unity2
-  texture: {fileID: 8400000, guid: 1a872c50e7c15cf4d91cccbb7b692daf, type: 2}
+  texture: {fileID: 8400000, guid: b990a725ed031984ba053d9b1e6b8509, type: 2}
   debugConsole: 1
 --- !u!124 &2128877953
 Behaviour:
@@ -460,7 +460,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 1a872c50e7c15cf4d91cccbb7b692daf, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: b990a725ed031984ba053d9b1e6b8509, type: 2}
   m_TargetDisplay: 0
   m_HDR: 0
   m_OcclusionCulling: 1
