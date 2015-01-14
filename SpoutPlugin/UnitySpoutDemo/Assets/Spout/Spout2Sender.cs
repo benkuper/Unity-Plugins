@@ -17,12 +17,14 @@ public class Spout2Sender : MonoBehaviour {
 	
 	void Start()
 	{
-		if(texture != null) senderIsCreated = Spout2.CreateSender(sharingName,texture);
 	}
 	
 	void Update()
 	{
-		if(texture != null && senderIsCreated) Spout2.UpdateSender(sharingName,texture);	
+		if (texture == null)
+						return;
+		if(!senderIsCreated) senderIsCreated = Spout2.CreateSender(sharingName,texture);
+		else Spout2.UpdateSender(sharingName,texture);	
 	}
 	
 	void OnDestroy()

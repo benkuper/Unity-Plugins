@@ -1,9 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Spout\Spout2Sender.cs">
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="..\..\..\..\Oculus\Assets\Myo Samples\Scripts\JointOrientation.cs">
     <Files>
-      <File FileName="Assets\Spout\Spout2Sender.cs" Line="25" Column="1" />
-      <File FileName="Assets\Spout\Spout2.cs" Line="106" Column="16" />
+      <File FileName="..\..\..\..\Oculus\Assets\Myo Samples\Scripts\JointOrientation.cs" Line="35" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
