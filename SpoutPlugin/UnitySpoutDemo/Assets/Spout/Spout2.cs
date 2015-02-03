@@ -42,11 +42,14 @@ public class Spout2 : MonoBehaviour {
 				
 		Debug.Log ("Start receiving");
 		startReceiving ();
-		
-		spoutObject = new GameObject("Spout");
-		
-		spoutObject.AddComponent<Spout2>();
-		
+
+		if(FindObjectsOfType<Spout2>().Length <=0){
+			
+			spoutObject = new GameObject("Spout");
+			
+			spoutObject.AddComponent<Spout2>();
+		}
+
 		return isInit;
 		
 		

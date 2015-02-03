@@ -5,7 +5,7 @@ RenderTexture:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: SpoutRenderTexture 1
+  m_Name: SpoutRenderTexture 2
   m_Width: 1280
   m_Height: 800
   m_AntiAliasing: 1
