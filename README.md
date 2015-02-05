@@ -1,9 +1,12 @@
 Unity-Plugins
 =============
-
 My collection of Unity Plugins
 
-## Spout Plugin
+## Important notes
+This plugin is now hosted and maintained on another github repository here : https://github.com/sloopidoopi/Spout4Unity
+This repository will be removed in few days
+
+### Spout Plugin
 This plugin allows Unity to receive and share textures from and to external softwares like Resolume, Adobe AIR, After Effects...
 It has been updated to fully supports the Spout2SDK available here : https://github.com/leadedge/Spout2
 
